@@ -11,7 +11,7 @@ int main()
 }
 ```
 
-<img src="../image/C语言基础/image-20220515184821987.png" alt="image-20220515184821987" style="zoom: 70%;" />
+<img src="../image/C语言基础/image-20220515184821987.png" alt="image-20220515184821987" style="zoom: 50%;" />
 
 
 
@@ -39,7 +39,9 @@ int main()
 
 1、除于2逆向取余法：除于2，逆向取余，直到商为零结束
 
-(37)<sub>10</sub> ---> (100101)<sub>2</sub>   <img src="../image/C语言基础/image-20220517123618237.png" alt="image-20220517123618237" style="zoom: 50%;" />
+(37)<sub>10</sub> ---> (100101)<sub>2</sub> 
+
+  <img src="../image/C语言基础/image-20220517123618237.png" alt="image-20220517123618237" style="zoom: 50%;" />
 
 2、逆转8421法               (128  64  32  16  8  4  2  1)
 
