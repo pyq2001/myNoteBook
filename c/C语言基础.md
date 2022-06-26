@@ -1020,3 +1020,549 @@ int main()
 
 - 数组名[下标]
 - *(数组名 +下标) 
+
+### 行指针
+
+- &a表示二维数组地址
+- a表示首行地址。
+- &a[0]表示首行地址。
+- a[0]表示首行首元素地址。
+- a\[0][0]表示首行首元素的值。
+- &a\[0][0]表示首行首元素地址。
+
+```c
+int main()
+{
+	int a[3][4] = {{1,3,5,7},{9,11,13,15},{17,19,21,23}};
+	int *p = &a[0][0];
+	int i,j;
+	for(i = 0;i < 3;i++)
+	{
+		for(j = 0;j < 4;j++)
+		{
+			printf("%d\t",*(p++));
+		}
+		printf("\n");
+	}
+	return 0;
+}
+```
+
+```c
+int main()
+{
+	int a[3][4] = {
+		{1,2,3,4},
+		{5,6,7,8},
+		{9,0,1,2}
+	};
+	int *p; // 绑定一个变量的地址
+	// 定义了一个行指针，是指针变量，
+	// 只能存放长度为N的int型数组的地址,绑定的是一行
+	int (*p2)[4];
+	// p = a; // 错误，a绑定的是第一行，类型级别不匹配
+	p = &a[0][0];
+	p = a[0]; // 相当于 p = &a[0][0];
+	printf("%d\n",*p); // 1
+	p2 = a;
+	printf("%d\n",*p2); // 1703684
+
+	printf("p代表的地址：%d\n",p); // p代表的地址：1703684
+	printf("p2代表的地址：%d\n",p2); // p2代表的地址：1703684
+	p = p + 1;
+	p2 = p2 + 1;
+	printf("p代表的地址：%d\n",p); // p代表的地址：1703688
+	printf("p2代表的地址：%d\n",p2); // p2代表的地址：1703700
+	return 0;
+}
+```
+
+行指针: 存放一维数组首地址，绑定一行
+
+`int a[3][4] = {{1,3,5,7},{9,11,13,15},{17,19,21,23}};`
+
+<table border = '1px' align = 'center'>
+    <tr align = 'center'>
+    	<td colspan='2'></td>
+        <td>a[0]+0</td>
+        <td>a[0]+1</td>
+        <td>a[0]+2</td>
+        <td>a[0]+3</td>
+    </tr>
+    <tr align = 'center'>
+    	<td rowspan = '3'>行<br>指<br>针</td>
+        <td>a[0]</td>
+        <td>1</td>
+        <td>3</td>
+        <td>5</td>
+        <td>7</td>
+    </tr>
+    <tr align = 'center'>
+        <td>a[1]</td>
+        <td>9</td>
+        <td>11</td>
+        <td>13</td>
+        <td>15</td>
+    </tr>
+    <tr align = 'center'>
+        <td>a[2]</td>
+        <td>17</td>
+        <td>19</td>
+        <td>21</td>
+        <td>23</td>
+    </tr>
+    <tr align = 'center'>
+        <td colspan = '2'></td>
+        <td>*(a+2)+0</td>
+        <td>*(a+2)+1</td>
+        <td>*(a+2)+2</td>
+        <td>*(a+2)+3</td>
+    </tr>
+</table>
+
+
+```c
+void output(int *a[],int row,int col)
+{
+	int i,j;
+	for(i = 0;i < row;i++)
+	{
+		for(j = 0;j < col;j++)
+		{
+			printf("%d\t",*(*(a+i)+j));
+		}
+		printf("\n");
+	}
+}
+```
+
+output函数的函数头可以有以下三种形式:
+
+- output(int **a)
+- output(int *a[])
+- output(int *a[N])
+
+### 结构体指针
+
+结构体指针怎么访问结构体成员变量:
+
+结构体指针->成员变量,
+(*结构体指针).成员变量
+
+```c
+typedef struct stu
+{
+	int num;
+	int score;
+	int a[5];
+}STU;
+
+int main()
+{
+	STU Tom = {111,100};
+	STU *p; // 结构体指针变量
+	p = &Tom;
+	Tom.num = 222;
+	p->score = 99; // 相当于Tom.score = 99;
+	(*p).num = 333; // 相当于Tom.num = 333;
+	p->a[0] = 10; // Tom.a[0] = 10;
+	printf("请输入序号：");
+	scanf("%d",&p->num); // 相当于scanf("%d",&Tom.num);
+	printf("序号：%d\n",p->num);
+	printf("成绩：%d\n",p->score);
+	return 0;
+}
+```
+
+# 九、字符串
+
+## 字符串常量
+
+用一对单引号引起来的一个字符，要求单引号里面有且仅有一个字符，在内存中以ASCII码的形式存储，占据一个字节。
+
+- 普通字符常量:  注意单引号、双引号和斜杠三个特殊字符的写法 `'\\'	'\''	'\"'`即必须在前面加\字符。
+- 转义字符常量:
+  数值转义:  'xhh': hh表示后面跟1~2位16进制数最大为'\FF'。
+                      '\ddd':ddd_跟1~3位八进制数不能超过unsigned char的最大值，因此最大为\377 。                                                                             字符转义：'\t'    '\n'
+
+```c
+int main()
+{
+	char c = 0; // 字符型，-128 --127，占据1个字节
+	c = ' '; // 由一对单引号''括起来的一个字符，占据一个字节
+	// c = ''; // 错误，不能是0个字符
+	// c = 'AB'; // 错误,不能是多个字符
+	// c = '啊'; // 错误，一个中文占据2个字节
+	printf("%d\n",c);
+	printf("%c<-空格\n",c);
+	c = 'B' + 32; // 大写转小写
+	printf("%d\n",c);
+	printf("%c\n",c);
+	c = '9' - '0'; // 数字字符转成对应的数字
+	printf("%d\n",c);
+	return 0;
+}
+```
+
+## 字符串常量
+
+用一对双引号包含的字符，在内存中存放时，以’\0’为结束标识（\0是数值转义字符，对应的ASCI码为数值0）。
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+	printf("%s\n","abcDEF");
+	printf("占据的字节数：%d\n",sizeof("abcDEF")); // 7   以'\0'结尾
+	printf("长度：%d\n",strlen("abcDEF")); // 6 需要包含头文件<string.h>
+	printf("\n");
+	printf("%s\n","abc\0DEF"); // abc
+	printf("占据的字节数：%d\n",sizeof("abc\0DEF")); // 8 
+	printf("长度：%d\n",strlen("abc\0DEF")); // 3 strlen()从左往右遇到第一个\0截止
+	printf("\n");
+	// 字符串:由一对双引号括起来的0个或多个字符
+	printf("占据的字节数：%d\n",sizeof("")); // 1  '\0'结尾 
+	printf("长度：%d\n",strlen("")); // 0
+	return 0;
+}
+```
+
+## 字符数组
+
+```c
+int main()
+{
+	char str1[5] = {'A','B','C','D','\0'}; // 以'\0'结尾
+	char str2[5] = {'a','b','c'}; // 部分赋初值，会自动在末尾加'\0'，即a[3] = '\0'
+	char str3[5] = "qwer"; // 系统会自动在后面加'\0'，所以总长度不能超过数组长度
+	char str4[] = "asdfghjkl"; // 长度为9
+	int i = 0;
+	for(i = 0;i < 5;i++)
+	{
+		printf("%c",str1[i]);
+	}
+	printf("\n");
+	printf("%s\n",str1);
+	printf("%s\n",str2);
+	printf("%s\n",str3);
+	printf("%s\n",str4);
+	return 0;
+}
+```
+
+## 字符串的存储结构和指针
+
+```c
+int main()
+{
+	char str[10] = "ABCD";
+	char *p,*p1; // char型指针变量
+	p = str; // p = &str[0];
+	printf("%s\n",str); // ABCD
+	printf("%s\n",p); // ABCD
+	*(p+2) += 32; // p[2] += 32; // str[2] += 32;
+	printf("%s\n",str); // ABcD
+	printf("%s\n",p); // ABcD
+	p1 = "HIJK"; // 指向字符串常量首地址
+	// *p1 = 'R'; // 不可修改
+	printf("%s\n",p1); // HIJK
+	printf("%s\n",p1 + 2); // JK
+	return 0;
+}
+```
+
+## 字符串的输入与输出
+
+输出：
+
+```c
+int main()
+{
+	char str[10] = "ABCD";
+	char ch = 'a';
+	printf("%s\n",str); // 字符串输出
+	puts(str); // 字符的输出函数，会自动换行
+	printf("%c\n",ch);//单个字符的输出
+	putchar(ch);//单个字符的输出函数,不会自动换行
+	return 0;
+}
+```
+
+输入：
+
+```c
+int main()
+{
+	char str[10] = "ABCD";
+	char ch = 'a';
+	printf("请输入一个字符：");
+	scanf("%c",&ch); // 单个字符的输入
+	printf("%c\n",ch);
+	getchar();
+	printf("请输入一个字符：");
+	ch = getchar(); // 单个字符的输入
+	putchar(ch);
+	printf("请输入一个字符串：");
+	scanf("%s",str); // 字符串的输入
+	printf("%s\n",str);
+	getchar(); // 消除回车符影响后面的输入
+	printf("请输入一个字符串：");
+	gets(str); // 字符串的输入函数
+	puts(str); // 字符串的输出函数
+	return 0;
+}
+```
+
+## 字符串处理函数
+
+注意必须包含 stdio.h 和 string.h
+
+1. 求字符串长度函数
+     int strlen ( const char*pStr) //参数: 字符串指针    返回值: 长度
+2. 字符串复制函数
+   char* strcpy(char* pDes, const char* pSrc) // 参数：目标字符串指针  源字符串指针      返回值：目标字符串指针
+3. 字符串连接函数
+   char* strcat(char* pDes, const char* pSrc) // 参数：目标字符串指针  源字符串指针      返回值：目标字符串指针
+4. 字符串比较                                                                                                                                                                                                                   int strcmp(const char * pDes , const char * pSrc);
+   设这两个字符串为str1，str2
+   若str1==str2，则返回零;
+   若str1<str2，则返回负数;
+   若str1>str2，则返回正数。
+   比较规则: 从左向右的字符两两比较，如果相同则继续向后比较，直到遇到第一个不相同的字符就以该不同的字符作为比较的依据。
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+	char s1[10] = "ABCDE";
+	char s2[10] = "哈哈";
+	char s3[10] = "QWER";
+	char s4[10] = "abcd";
+	char s5[10] = "abed";
+	char *p;
+	// 求字符串长度函数
+	int len = strlen(s2); // 4
+	printf("%d\n",len);
+	// 字符串复制函数
+	p = strcpy(s1,s2); // 注意目标地址，不要越界了
+	puts(s1); // 哈哈
+	puts(s2); // 哈哈
+	puts(p); // 哈哈
+	// 字符串连接函数
+	p = strcat(s2,s3);
+	puts(s2); // 哈哈QWER
+	puts(s3); // QWER
+	puts(p); // 哈哈QWER
+	// 字符串比较
+	printf("%d\n",strcmp(s4,s5)); // -1   s4 < s5
+	return 0;
+}
+```
+
+# 十、内存管理
+
+一切皆占内存!
+C/C++中的变量、常量、函数都是占据内存的，系统将内存划分为5个存储区，这些存储区是系统划定的，是真实存在的实事，不需要人为干预。也就是说我们写好一段程序之后，系统会自动的将常量、变量或者函数自动划分到不同的存储区中。不同的存储区内存的开辟时间和销毁时间是不同的，同时每一个存储区占据的内存是连续的!这样做的目的是为了提高程序的运行效率。这5个存储区分别为: 常量区、代码区、栈区、堆区、 全局区（静态区）
+
+## 五大存储区（常量区   代码区   栈区   静态区   堆区)
+
+1、常量区：
+
+- c语言中常量是占据内存的，系统将常量集中存储在一块连续的内存空间中，常量区的内存具备“只读性”，不能改写。这块存储常量的内存空间叫做常量区。
+- 存放常量
+- 开辟时间:  编译时
+- 释放时间:  程序结束后由系统释放。
+
+2、代码区
+
+- 存放函数体的二进制代码
+- 开辟时间:  编译时
+- 释放时间:  程序结束后由系统释放
+
+3、栈区 auto
+
+- 局部变量:  函数作用域或者语句块作用域内定义的变量
+- 全局变量:  文件作用域内定义的变量
+- 要点1:  用auto声明的变量就是栈区变量
+- 要点2:  只有局部变量能声明auto，全局变量不能用auto声明
+- 要点3:  形式参数只能用auto声明
+- 要点4:   auto通常是省略的
+- 内存开辟时间:  运行时
+- 内存销毁时间:  变量所在的作用域结束后
+
+补充知识：
+
+- register:  寄存器变量。
+- 要点1:  存储在CPU的寄存器中不占据内存，因此没有地址。
+- 要点2:  寄存器变量是建议性的，是否真的为寄存器变量取决于编译器要点3:通常将使用频率较高的变量声明为寄存器变量。
+
+4、静态区(全局区)  static 
+
+- 开辟时间:  编译时执行，以后再也不会执行
+- 销毁时间:  主函数结束后
+- 要点1:  形式参数一定不能用static声明!
+- 要点2:  全局变量用static声明表示文件作用域，否则表示可以在其他文件内扩展使用
+
+补充知识点:
+
+​			静态函数和非静态函数的区别在于,静态函数具备文件作用域，不能在其他文件扩展使用
+
+5、堆区
+
+用 malloc() 或者 calloc() 函数创建的变量。
+
+区别:
+
+1. 两者都是动态分配内存。主要的不同是malloc,不初始化分配的内存，已分配的内存中可以是任意的值。calloc初始化已分配的内存为0。
+2. calloc分配的是一个数组，而malloc分配的是一个对象
+3. 要点:  malloc和 calloc分配的内存在堆区，堆内存必须通过free函数回收内存，否则造成内存泄漏。
+
+在使用这两个函数前，要先包含头文件`#include <stdlib.h>`
+
+开辟时间:  执行到malloc或calloc函数时分配内存。
+
+销毁时间:  执行到free函数时释放内存
+
+```c
+#include <stdlib.h>
+
+int main()
+{
+	int *p;
+	// void * malloc (size_t n)
+	// void * 通用指针类型
+	// 申请了一块 sizeof(int) = 4个字节堆内存，并强制转换为int *型
+	p = (int *)malloc(sizeof(int));
+	// 申请不到会返回NULL
+	if(p == NULL)
+		printf("无法申请到堆内存\n") ;
+	else
+	{
+		*p = 20;
+		printf("%d\n",*p);
+		free(p); // 释放p指向的堆内存
+	}
+	return 0;
+}
+```
+
+```c
+#include <stdlib.h>
+
+int main()
+{
+	int *p;
+	// void* calloc (size_t n, size_t s)
+	//               长度        大小
+	// /申请了一块长度为5，每个为4个字节的堆内存
+	// 里面的数据赋初值为0
+	p = (int *)calloc(5,sizeof(int));
+	p[0] = 10;
+	free(p); // 销毁p所指向的内存
+	return 0;
+}
+```
+
+链表的应用：
+
+```c
+#include <stdlib.h>
+
+typedef struct node
+{
+	int data;
+	struct node *next;
+}NODE;
+
+int main()
+{
+	NODE *p;
+	p = (NODE *)malloc(sizeof(NODE));
+	p->data = 1;
+	p->next = (NODE *)malloc(sizeof(NODE));
+	p->next->data = 2;
+	p->next->next = NULL;
+	printf("第一块堆内存的地址：%p\n",p);
+	printf("第二块堆内存的地址：%p\n",p->next);
+	free(p->next); // 释放第二块堆内存
+	free(p); // // 释放第一块堆内存
+	return 0;
+}
+```
+
+## 函数指针
+
+C语言的函数也是要占据内存的，系统会为这些函数的内存分配地址，我们把这个地址叫做函数指针，C语言中的函数名称称为函数指针常量。(也称为函数的入口地址)
+
+```c
+void fun1(void);
+int fun2(int x);
+
+int main()
+{
+	// 定义了一个函数指针变量pfun1，可以存放函数的地址
+	// 返回值类型为void，形参为void的函数
+	void (*pfun1)(void);
+	// 定义了一个函数指针变量pfun2，可以存放函数的地址
+	// 返回值类型为int，有一个形参为int的函数
+	int (*pfun2)(int x);
+	// 定义了一个函数指针数组，相当于定义了5个函数指针变量
+	void (*pf[5])(void);
+	printf("fun1的地址：%d\n",fun1);
+	printf("fun2的地址：%d\n",fun2);
+	pfun1 = fun1; //指向函数fun1的入口地址
+	pfun1(); // 相当于fun1();
+	pfun2 = fun2;
+	(*pfun2)(111); // 第二种调用方式
+	pf[0] = fun1;
+	pf[0]();
+	return 0;
+}
+
+void fun1(void)
+{
+	printf("fun1\n");
+}
+int fun2(int x)
+{
+	printf("fun2\n");
+	return 0;
+}
+```
+
+# 十一、文件操作
+
+## 打开文件
+
+fopen() // file open
+
+FILE *fopen(const char *path, const char *mode); 
+
+功能:  打开文件，获得对应的流指针
+
+参数:
+
+- @path          要打开的文件名(可以包含路径)，是一个字符串
+- @mode         打开模式(字符串)
+
+对文本文件:
+
+- "r"  只读方式，文件必须存在，不存在则报错
+- "r+”  读写方式，文件必须存在，不存在则报错。
+- "w"  只写方式，文件存在时，截短为0，不存在，则创建-->创建了一个新的空文件
+- "w+"  读写方式，文件存在时，截短为0，不存在，则创建->创建了一个新的空文件
+- "a"  追加(写)，文件存在时，从文件末尾开始写，文件不存在时，则新建一个文件
+- "a+"  追加(读写)，文件存在时，从文件末尾开始写，文件不存在时，则新建一个文件。
+
+对二进制文件:
+
+-   "rb"   "rb+"   "wb"   "wb+"   "ab"   "ab+"
+
+返回值：
+
+- 成功           FILE指针
+- 失败           NULL 
