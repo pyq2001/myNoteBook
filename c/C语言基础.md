@@ -1566,3 +1566,173 @@ FILE *fopen(const char *path, const char *mode);
 
 - 成功           FILE指针
 - 失败           NULL 
+
+## 读写操作
+
+### 1、按字符读写
+
+读:  (从文件中读取一个字符）
+
+int fgetc(FILE *stream);
+
+- 功能:  从指定的流文件中获得字符参数
+- @stream          指定的文件指针返回值:
+- 成功                   返回对应字符的ascii值
+- 失败                   EOF（文件结束）
+                             error (错误)               都是-1
+
+区分:    eof  还是 error
+
+feof();          eferror();
+
+检查对应文件的状态( eof    error )
+
+- int feof(FILE *stream); // 如果对应的文件数据到达文件结尾(eof)，则该函数的返回值为非0值
+- int ferror(FILE *stream); // 如果对应的文件数据出错，则该函数的返回值为非О值。
+
+
+
+写:  (往指定文件中写入一个字符）
+
+int fputc(int c,FILE *stream);
+
+功能:
+
+- 实现字符输出
+- 参数:
+            @c                    要输出的字符。
+            @stream          指定的输出文件对应的文件指针
+  返回值:
+            成功                  写入的字符对应的ascii码
+            失败                   EOF
+
+```c
+int main()
+{
+	FILE *fp; // 定义一个文件指针
+	char ch = 0;
+	// 用绝对路径的方式，以可读可写的模式打开文件
+	// 文件打开成功，则返回该文件的地址，打开失败则返回NULL
+	// fp = fopen("D:/learn/C/C_Base/demo8/a.txt","r+");
+	// 相对路径
+	fp = fopen("./a.txt","r+");
+	if(fp == NULL)
+		printf("打开文件失败\n");
+	else
+	{
+		printf("打开a.txt文件成功\n");
+		// int fgetc (FILE *stream)
+		// ch = fgetc(fp); // 读一个字符，返回ASCII码
+		// printf("读出的字符：%c\n",ch);
+		// int fputc(int c,FILE *stream);
+		ch = fputc('A',fp); // 写入一个字符
+		if(ch == EOF)
+			printf("写入失败\n");
+		else
+			printf("写入成功\n");
+		fclose(fp); // 关闭文件
+	}
+	return 0;
+}
+```
+
+```c
+int main()
+{
+	FILE *fp;
+	char ch = 0;
+	fp = fopen("./a.txt","r+");
+	if(fp == NULL)
+		printf("打开文件失败\n");
+	else
+	{
+		printf("打开a.txt文件成功\n");
+		// int feof(FILE *stream); 
+		// 如果对应的文件数据到达文件结尾(eof)，则该函数的返回值为非0值
+		while(!feof(fp)) // 判断是否为文件结束
+		{
+			ch = fgetc(fp); 
+			printf("读出的字符：%c\n",ch);
+		}
+		fclose(fp);
+	}
+	return 0;
+}
+```
+
+
+
+### 2、 按行读写, 按字符串进行读写。
+
+读:（从文件中读取一行字符串）
+
+char* fgets(char * s, int size, FILE * stream);
+
+- 功能:                获取字符(串)
+- 参数:
+             @s                           自己开辟的一块内存空间的首地址(用来保存获取到数据)
+             @size                     一次fgets操作期望读取到的最大字符个数
+             @stream                指定的输入文件的文件指针
+- 返回值:
+             成功                         s
+             失败                        NULL      文件结尾NULL
+
+读取结束:
+
+(1)  EOF          (2)  '\n'                 (3)size           
+
+对'\n'的处理:               fgets会将 '\n' 保存到 buffer中去
+
+每次读取结束最后都会添加一个'\0",保证是一个字符串   ;   fgets 一次最多能读取 size-1 个字符
+
+写  :
+
+int fputs(const char * s, FILE * stream);      // 将s 指定的字符串输出到stream指定的文件中。
+'
+注意:
+
+fputs不会将 '\0' 进行输出，遇到  '\0' 就输出
+
+```c
+int main()
+{
+	FILE *fp;
+	char str[10] = "qwer";
+	fp = fopen("./a.txt","r+");
+	if(fp == NULL)
+		printf("打开文件失败\n");
+	else
+	{
+		printf("打开a.txt文件成功\n");
+		// char* fgets(char * s, int size, FILE * stream);
+		// fgets(str,5,fp); // 读一个长度为 5 - 1 的字符串。末尾会加 '\0'
+		// puts(str);
+		// 往文件中写入字符串
+		fputs(str,fp) ;
+		fclose(fp);
+	}
+	return 0;
+}
+```
+
+### 3、按对象读写(二进制的读写)
+
+读:    fread
+
+写:   fwrite  // size_t --> intw
+
+size_t fread(void  *ptr, size_t  size, size_t  nmemb, FILE  *stream);
+
+size_t  fwrite(const  void  *r, size_t  size, size_t  nmemb,FILE  *stream);
+对象:   -->可以指定按什么数据类型进行操作,
+                                    (int char short结构体等)。
+参数:
+			@ptr                     保存数据的内存空间首地址
+			@size                   单个对象的大小   sizeof(对象类型)
+			@nmemb            一次期望操作的对象个数
+			@stream              要操作的流文件。
+
+
+返回值:
+          成功              返回值成功操作的 对象个数
+		 失败                0
