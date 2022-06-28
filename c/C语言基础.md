@@ -1736,3 +1736,133 @@ size_t  fwrite(const  void  *r, size_t  size, size_t  nmemb,FILE  *stream);
 返回值:
           成功              返回值成功操作的 对象个数
 		 失败                0
+
+注意:
+          一次操作的字节数 = 成功操作的对象个数*单个对象的大小。如果想完整的读取到文件的内容，文件中没有固定的数据格式时，最好按char来读
+
+```c
+typedef struct
+{
+	char name[20];
+	char tel[20];
+}NODE;
+
+int main()
+{
+	FILE *fp;
+	int res;
+	NODE cl[5] = {
+		{"张三","19231323131"},
+		{"李四","12321432523"},
+		{"王五","14324325445"}
+	};
+	fp = fopen("./b.txt","r+");
+	if(fp == NULL)
+		printf("打开文件失败\n");
+	else
+	{
+		printf("打开文件成功\n");
+		// 往文件中写入数据
+		//                写入对象的地址   写入大小      写入几次      操作文件指针
+		// size_t  fwrite(const  void  *r, size_t  size, size_t  nmemb,FILE  *stream);
+		// res = fwrite(cl,sizeof(NODE),3,fp);
+		// printf("成功写入%d条数据\n",res);
+
+		//从文件中读取数据
+		//        读出对象存放地址   读数据的大小     读几次      操作文件指针
+		// size_t fread(void  *ptr, size_t  size, size_t  nmemb, FILE  *stream);
+		res = fread(&cl[3],sizeof(NODE),1,fp);
+		printf("读出%d条数据\n",res);
+		printf("读出的姓名：%s\n",cl[3].name);
+		printf("读出的电话：%s\n",cl[3].tel);
+		fclose(fp);
+	}
+	return 0;
+}
+```
+
+文件定位 :
+
+int fseek(FILE *stream, long offset, int whence);
+
+功能:     设置offset的值，实现定位
+
+参数:
+            @stream                           要定位的文件指针
+            @offset                             偏移值
+            @whence                          相对的偏移起点
+
+​							SEEK_SET                            从文件开头偏移                  offset >= 0
+​							SEEK_CUR                           当前位詈                              offset可正可负
+​							SEEK_END                           文件结尾                              offset可正可负
+
+返回值:
+               成功                  0
+               失败                 -1 & errno 置位。
+
+```c
+typedef struct
+{
+	char name[20];
+	char tel[20];
+}NODE;
+
+int main()
+{
+	FILE *fp;
+	int res;
+	NODE cl[5] = {
+		{"张三","19231323131"},
+		{"李四","12321432523"},
+		{"王五","14324325445"}
+	};
+	fp = fopen("./b.txt","r+");
+	if(fp == NULL)
+		printf("打开文件失败\n");
+	else
+	{
+		printf("打开文件成功\n");
+		// 往文件中写入数据
+		//                写入对象的地址   写入大小      写入几次      操作文件指针
+		// size_t  fwrite(const  void  *r, size_t  size, size_t  nmemb,FILE  *stream);
+		res = fwrite(cl,sizeof(NODE),3,fp);
+		printf("成功写入%d条数据\n",res);
+
+		// 设置文件的读写位置，
+		//        要定位的文件指针   偏移值    相对的偏移起点   
+		// int fseek(FILE *stream, long offset, int whence);
+		// 回到文件开头，往后偏移0个字节的位置
+		// fseek(fp,0,SEEK_SET);
+
+		// 读出最后一个联系人的信息
+        // 回到文件末尾，往回偏移sizeof (NODE)个字节的位置
+		fseek(fp,-1*sizeof(NODE),SEEK_END);
+
+		//从文件中读取数据
+		//        读出对象存放地址   读数据的大小     读几次      操作文件指针
+		// size_t fread(void  *ptr, size_t  size, size_t  nmemb, FILE  *stream);
+		res = fread(&cl[3],sizeof(NODE),1,fp);
+		printf("读出%d条数据\n",res);
+		printf("读出的姓名：%s\n",cl[3].name);
+		printf("读出的电话：%s\n",cl[3].tel);
+		fclose(fp);
+	}
+	return 0;
+}
+```
+
+ftell  函数
+              该函数时用来获取文件当前文件指针的位置
+              long ftell(FILE *stream);  // 获得offset的值  返回值
+
+```c
+//获得文件的大小。
+fp;
+long len = O;
+	fseek(fp,0,SEEK_END);
+	len = ftell(fp);(len是文件中的字节数)
+```
+
+rewind  函数
+             //重新定位到文件开头
+             void rewind(FILE *stream);  <====>  fseek(fp,0,SEEK_SET);
