@@ -184,7 +184,7 @@ Feed-Forward层包括两层全连接层以及一个非线性激活函数ReLu。
 
 # 解码器
 
-<img src="../image/transformer/image-20221126125418492.png" alt="image-20221126125418492" style="zoom: 33%;" />
+<img src="../image/transformer/image-20221126125418492.png" alt="image-20221126125418492"  />
 
 仔细观察解码器结构，其包括：带有mask的MultiHeadAttention、MultiHeadAttention和前馈神经网络层三个组件，带有mask的MultiHeadAttention和MultiHeadAttention结构和代码写法是完全相同，唯一区别是是否输入了mask。
 
