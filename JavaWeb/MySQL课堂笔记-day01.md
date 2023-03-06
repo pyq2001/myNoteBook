@@ -350,81 +350,81 @@ as关键字可以省略？
 	+-------+
 	select ename from emp where ename between 'A' and 'D'; // 左闭右开。
 
-	找出哪些人津贴为NULL？
-		在数据库当中NULL不是一个值，代表什么也没有，为空。
-		空不是一个值，不能用等号衡量。
-		必须使用 is null或者is not null
-		select ename,sal,comm from emp where comm is null;
-		+--------+---------+------+
-		| ename  | sal     | comm |
-		+--------+---------+------+
-		| SMITH  |  800.00 | NULL |
-		| JONES  | 2975.00 | NULL |
-		| BLAKE  | 2850.00 | NULL |
-		| CLARK  | 2450.00 | NULL |
-		| SCOTT  | 3000.00 | NULL |
-		| KING   | 5000.00 | NULL |
-		| ADAMS  | 1100.00 | NULL |
-		| JAMES  |  950.00 | NULL |
-		| FORD   | 3000.00 | NULL |
-		| MILLER | 1300.00 | NULL |
-		+--------+---------+------+
-		select ename,sal,comm from emp where comm = null;
-		Empty set (0.00 sec)
+找出哪些人津贴为NULL？
+	在数据库当中NULL不是一个值，代表什么也没有，为空。
+	空不是一个值，不能用等号衡量。
+	必须使用 is null或者is not null
+	select ename,sal,comm from emp where comm is null;
+	+--------+---------+------+
+	| ename  | sal     | comm |
+	+--------+---------+------+
+	| SMITH  |  800.00 | NULL |
+	| JONES  | 2975.00 | NULL |
+	| BLAKE  | 2850.00 | NULL |
+	| CLARK  | 2450.00 | NULL |
+	| SCOTT  | 3000.00 | NULL |
+	| KING   | 5000.00 | NULL |
+	| ADAMS  | 1100.00 | NULL |
+	| JAMES  |  950.00 | NULL |
+	| FORD   | 3000.00 | NULL |
+	| MILLER | 1300.00 | NULL |
+	+--------+---------+------+
+	select ename,sal,comm from emp where comm = null;
+	Empty set (0.00 sec)
 
-	找出哪些人津贴不为NULL？
-		select ename,sal,comm from emp where comm is not null;
-		+--------+---------+---------+
-		| ename  | sal     | comm    |
-		+--------+---------+---------+
-		| ALLEN  | 1600.00 |  300.00 |
-		| WARD   | 1250.00 |  500.00 |
-		| MARTIN | 1250.00 | 1400.00 |
-		| TURNER | 1500.00 |    0.00 |
-		+--------+---------+---------+
+找出哪些人津贴不为NULL？
+	select ename,sal,comm from emp where comm is not null;
+	+--------+---------+---------+
+	| ename  | sal     | comm    |
+	+--------+---------+---------+
+	| ALLEN  | 1600.00 |  300.00 |
+	| WARD   | 1250.00 |  500.00 |
+	| MARTIN | 1250.00 | 1400.00 |
+	| TURNER | 1500.00 |    0.00 |
+	+--------+---------+---------+
 	
-	找出哪些人没有津贴？
-		select ename,sal,comm from emp where comm is null or comm = 0;
-		+--------+---------+------+
-		| ename  | sal     | comm |
-		+--------+---------+------+
-		| SMITH  |  800.00 | NULL |
-		| JONES  | 2975.00 | NULL |
-		| BLAKE  | 2850.00 | NULL |
-		| CLARK  | 2450.00 | NULL |
-		| SCOTT  | 3000.00 | NULL |
-		| KING   | 5000.00 | NULL |
-		| TURNER | 1500.00 | 0.00 |
-		| ADAMS  | 1100.00 | NULL |
-		| JAMES  |  950.00 | NULL |
-		| FORD   | 3000.00 | NULL |
-		| MILLER | 1300.00 | NULL |
-		+--------+---------+------+
+找出哪些人没有津贴？
+	select ename,sal,comm from emp where comm is null or comm = 0;
+	+--------+---------+------+
+	| ename  | sal     | comm |
+	+--------+---------+------+
+	| SMITH  |  800.00 | NULL |
+	| JONES  | 2975.00 | NULL |
+	| BLAKE  | 2850.00 | NULL |
+	| CLARK  | 2450.00 | NULL |
+	| SCOTT  | 3000.00 | NULL |
+	| KING   | 5000.00 | NULL |
+	| TURNER | 1500.00 | 0.00 |
+	| ADAMS  | 1100.00 | NULL |
+	| JAMES  |  950.00 | NULL |
+	| FORD   | 3000.00 | NULL |
+	| MILLER | 1300.00 | NULL |
+	+--------+---------+------+
 	
-	找出工作岗位是MANAGER和SALESMAN的员工？
-		select ename,job from emp where job = 'MANAGER' or job = 'SALESMAN';
-		+--------+----------+
-		| ename  | job      |
-		+--------+----------+
-		| ALLEN  | SALESMAN |
-		| WARD   | SALESMAN |
-		| JONES  | MANAGER  |
-		| MARTIN | SALESMAN |
-		| BLAKE  | MANAGER  |
-		| CLARK  | MANAGER  |
-		| TURNER | SALESMAN |
-		+--------+----------+
+找出工作岗位是MANAGER和SALESMAN的员工？
+	select ename,job from emp where job = 'MANAGER' or job = 'SALESMAN';
+	+--------+----------+
+	| ename  | job      |
+	+--------+----------+
+	| ALLEN  | SALESMAN |
+	| WARD   | SALESMAN |
+	| JONES  | MANAGER  |
+	| MARTIN | SALESMAN |
+	| BLAKE  | MANAGER  |
+	| CLARK  | MANAGER  |
+	| TURNER | SALESMAN |
+	+--------+----------+
 	
-	and和or联合起来用：找出薪资大于1000的并且部门编号是20或30部门的员工。
-		select ename,sal,deptno from emp where sal > 1000 and deptno = 20 or deptno = 30; // 错误的
-		select ename,sal,deptno from emp where sal > 1000 and (deptno = 20 or deptno = 30); // 正确的。
-		注意：当运算符的优先级不确定的时候加小括号。
+and和or联合起来用：找出薪资大于1000的并且部门编号是20或30部门的员工。
+	select ename,sal,deptno from emp where sal > 1000 and deptno = 20 or deptno = 30; // 错误的
+	select ename,sal,deptno from emp where sal > 1000 and (deptno = 20 or deptno = 30); // 正确的。
+	注意：当运算符的优先级不确定的时候加小括号。
 	
-	in等同于or：找出工作岗位是MANAGER和SALESMAN的员工？
-		select ename,job from emp where job = 'SALESMAN' or job = 'MANAGER';
-		select ename,job from emp where job in('SALESMAN', 'MANAGER');
+in等同于or：找出工作岗位是MANAGER和SALESMAN的员工？
+	select ename,job from emp where job = 'SALESMAN' or job = 'MANAGER';
+	select ename,job from emp where job in('SALESMAN', 'MANAGER');
 
-		select ename,job from emp where sal in(800, 5000); // in后面的值不是区间，是具体的值。
+	select ename,job from emp where sal in(800, 5000); // in后面的值不是区间，是具体的值。
 		+-------+-----------+
 		| ename | job       |
 		+-------+-----------+
@@ -432,14 +432,14 @@ as关键字可以省略？
 		| KING  | PRESIDENT |
 		+-------+-----------+
 	
-	not in: 不在这几个值当中。
-		select ename,job from emp where sal not in(800, 5000);
+not in: 不在这几个值当中。
+	select ename,job from emp where sal not in(800, 5000);
 	
-	模糊查询like ? 
-		找出名字当中含有O的？
-			（在模糊查询当中，必须掌握两个特殊的符号，一个是%，一个是_）
-			%代表任意多个字符，_代表任意1个字符。
-			select ename from emp where ename like '%O%';
+模糊查询like ? 
+	找出名字当中含有O的？
+		（在模糊查询当中，必须掌握两个特殊的符号，一个是%，一个是_）
+		%代表任意多个字符，_代表任意1个字符。
+		select ename from emp where ename like '%O%';
 			+-------+
 			| ename |
 			+-------+
@@ -447,8 +447,8 @@ as关键字可以省略？
 			| SCOTT |
 			| FORD  |
 			+-------+
-		找出名字中第二个字母是A的？
-			select ename from emp where ename like '_A%';
+	找出名字中第二个字母是A的？
+		select ename from emp where ename like '_A%';
 			+--------+
 			| ename  |
 			+--------+
@@ -456,8 +456,8 @@ as关键字可以省略？
 			| MARTIN |
 			| JAMES  |
 			+--------+
-		找出名字中有下划线的？
-			mysql> select * from t_user;
+	找出名字中有下划线的？
+		mysql> select * from t_user;
 			+------+----------+
 			| id   | name     |
 			+------+----------+
@@ -465,7 +465,7 @@ as关键字可以省略？
 			|    2 | lisi     |
 			|    3 | WANG_WU  |
 			+------+----------+
-			select name from t_user where name like '%_%';
+		select name from t_user where name like '%_%';
 			+----------+
 			| name     |
 			+----------+
@@ -473,15 +473,15 @@ as关键字可以省略？
 			| lisi     |
 			| WANG_WU  |
 			+----------+
-			select name from t_user where name like '%\_%';
+		select name from t_user where name like '%\_%';
 			+---------+
 			| name    |
 			+---------+
 			| WANG_WU |
 			+---------+
 
-		找出名字中最后一个字母是T的？
-			select ename from emp where ename like '%T';
+	找出名字中最后一个字母是T的？
+		select ename from emp where ename like '%T';
 			+-------+
 			| ename |
 			+-------+
@@ -608,32 +608,32 @@ order by
 	
 		select sum(comm) from emp where comm is not null; // 不需要额外添加这个过滤条件。sum函数自动忽略NULL。
 	
-		找出工资高于平均工资的员工？
-			select avg(sal) from emp; // 平均工资
-			+-------------+
-			| avg(sal)    |
-			+-------------+
-			| 2073.214286 |
-			+-------------+
+	找出工资高于平均工资的员工？
+		select avg(sal) from emp; // 平均工资
+		+-------------+
+		| avg(sal)    |
+		+-------------+
+		| 2073.214286 |
+		+-------------+
 	
-			select ename,sal from emp where sal > avg(sal); //ERROR 1111 (HY000): Invalid use of group function
-			思考以上的错误信息：无效的使用了分组函数？
-				原因：SQL语句当中有一个语法规则，分组函数不可直接使用在where子句当中。why????
-				怎么解释？
-					因为group by是在where执行之后才会执行的。
+		select ename,sal from emp where sal > avg(sal); //ERROR 1111 (HY000): Invalid use of group function
+	思考以上的错误信息：无效的使用了分组函数？
+		原因：SQL语句当中有一个语法规则，分组函数不可直接使用在where子句当中。why????
+		怎么解释？
+			因为group by是在where执行之后才会执行的。
 				
-				select		5
-					..			
-				from			1
-					..
-				where			2
-					..
-				group by		3
-					..
-				having		4
-					..
-				order by		6
-					..
+			select		5
+				..			
+			from			1
+				..
+			where			2
+				..
+			group by		3
+				..
+			having		4
+				..
+			order by		6
+				..
 	
 	count(*)和count(具体的某个字段)，他们有什么区别？
 		count(*):不是统计某个字段中数据的个数，而是统计总记录条数。（和某个字段无关）
@@ -649,15 +649,15 @@ order by
 		+----------+----------+-------------+----------+----------+
 	
 	找出工资高于平均工资的员工？
-		第一步：找出平均工资
-			select avg(sal) from emp;
+	第一步：找出平均工资
+		select avg(sal) from emp;
 			+-------------+
 			| avg(sal)    |
 			+-------------+
 			| 2073.214286 |
 			+-------------+
-		第二步：找出高于平均工资的员工
-			select ename,sal from emp where sal > 2073.214286;
+	第二步：找出高于平均工资的员工
+		select ename,sal from emp where sal > 2073.214286;
 			+-------+---------+
 			| ename | sal     |
 			+-------+---------+
@@ -669,7 +669,7 @@ order by
 			| FORD  | 3000.00 |
 			+-------+---------+
 	
-			select ename,sal from emp where sal > (select avg(sal) from emp);
+		select ename,sal from emp where sal > (select avg(sal) from emp);
 
 15、单行处理函数
 	什么是单行处理函数？
@@ -726,9 +726,6 @@ select max(sal),job from emp group by job;
 +----------+-----------+
 ```
 
-
-?	
-
 	注意：分组函数一般都会和group by联合使用，这也是为什么它被称为分组函数的原因。
 	并且任何一个分组函数（count sum avg max min）都是在group by语句执行结束之后才会执行的。
 	当一条sql语句没有group by的话，整张表的数据会自成一组。
@@ -761,8 +758,8 @@ select max(sal),job from emp group by job;
 	
 	找出每个部门的最高薪资，要求显示薪资大于2900的数据。
 	
-		第一步：找出每个部门的最高薪资
-		select max(sal),deptno from emp group by deptno;
+	第一步：找出每个部门的最高薪资
+	select max(sal),deptno from emp group by deptno;
 		+----------+--------+
 		| max(sal) | deptno |
 		+----------+--------+
@@ -771,8 +768,8 @@ select max(sal),job from emp group by job;
 		|  2850.00 |     30 |
 		+----------+--------+
 	
-		第二步：找出薪资大于2900
-		select max(sal),deptno from emp group by deptno having max(sal) > 2900; // 这种方式效率低。
+	第二步：找出薪资大于2900
+	select max(sal),deptno from emp group by deptno having max(sal) > 2900; // 这种方式效率低。
 		+----------+--------+
 		| max(sal) | deptno |
 		+----------+--------+
@@ -780,13 +777,15 @@ select max(sal),job from emp group by job;
 		|  3000.00 |     20 |
 		+----------+--------+
 	
-		select max(sal),deptno from emp where sal > 2900 group by deptno;  // 效率较高，建议能够使用where过滤的尽量使用where。
+	select max(sal),deptno from emp where sal > 2900 group by deptno;  // 效率较高，建议能够使用where过滤的尽量使用where。
 		+----------+--------+
 		| max(sal) | deptno |
 		+----------+--------+
 		|  5000.00 |     10 |
 		|  3000.00 |     20 |
 		+----------+--------+
+	
+	
 	
 	找出每个部门的平均薪资，要求显示薪资大于2000的数据。
 	
@@ -810,8 +809,8 @@ select max(sal),job from emp group by job;
 	+--------+-------------+
 	
 	where后面不能使用分组函数：
-		select deptno,avg(sal) from emp where avg(sal) > 2000 group by deptno;	// 错误了。
-		这种情况只能使用having过滤。
+	select deptno,avg(sal) from emp where avg(sal) > 2000 group by deptno;	// 错误了。
+	这种情况只能使用having过滤。
 
 17、总结一个完整的DQL语句怎么写？
 
