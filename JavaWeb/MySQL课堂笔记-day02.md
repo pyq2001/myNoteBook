@@ -1,6 +1,8 @@
 MySQL day02
 
 1¡¢¹ØÓÚ²éÑ¯½á¹û¼¯µÄÈ¥ÖØ£¿
+
+```mysql
 mysql> select distinct job from emp; // distinct¹Ø¼ü×ÖÈ¥³ıÖØ¸´¼ÇÂ¼¡£
 +-----------+
 | job       |
@@ -30,15 +32,15 @@ mysql> select distinct deptno,job from emp;
 |     30 | CLERK     |
 |     10 | CLERK     |
 +--------+-----------+
-
 °¸Àı£ºÍ³¼Æ¸ÚÎ»µÄÊıÁ¿£¿
 select count(distinct job) from emp;
-
 +---------------------+
 | count(distinct job) |
 +---------------------+
 |                   5 |
 +---------------------+
+
+```
 
 2¡¢Á¬½Ó²éÑ¯
 
@@ -70,6 +72,8 @@ select count(distinct job) from emp;
 2.3¡¢ÔÚ±íµÄÁ¬½Ó²éÑ¯·½ÃæÓĞÒ»ÖÖÏÖÏó±»³ÆÎª£ºµÑ¿¨¶û»ıÏÖÏó¡££¨µÑ¿¨¶û³Ë»ıÏÖÏó£©
 
 °¸Àı£ºÕÒ³öÃ¿Ò»¸öÔ±¹¤µÄ²¿ÃÅÃû³Æ£¬ÒªÇóÏÔÊ¾Ô±¹¤ÃûºÍ²¿ÃÅÃû¡£
+
+```mysql
 EMP±í
 +--------+--------+
 | ename  | deptno |
@@ -113,6 +117,7 @@ select ename,dname from emp,dept;
 | ALLEN  | OPERATIONS |
 ............
 56 rows in set (0.00 sec)
+```
 
 µÑ¿¨¶û»ıÏÖÏó£ºµ±Á½ÕÅ±í½øĞĞÁ¬½Ó²éÑ¯µÄÊ±ºò£¬Ã»ÓĞÈÎºÎÌõ¼ş½øĞĞÏŞÖÆ£¬×îÖÕµÄ²éÑ¯½á¹ûÌõÊıÊÇÁ½ÕÅ±í¼ÇÂ¼ÌõÊıµÄ³Ë»ı¡£
 
@@ -175,50 +180,54 @@ SQL99£º£¨³£ÓÃµÄ£©
 	on
 		e.deptno = d.deptno;
 
-	// inner¿ÉÒÔÊ¡ÂÔµÄ£¬´ø×ÅinnerÄ¿µÄÊÇ¿É¶ÁĞÔºÃÒ»Ğ©¡£
-	select 
-		e.ename,d.dname
-	from
-		emp e
-	inner join
-		dept d
-	on
-		e.deptno = d.deptno;
-	
-	Óï·¨£º
-		...
-			A
-		join
-			B
-		on
-			Á¬½ÓÌõ¼ş
-		where
-			...
-	
-	SQL99Óï·¨½á¹¹¸üÇåÎúÒ»Ğ©£º±íµÄÁ¬½ÓÌõ¼şºÍºóÀ´µÄwhereÌõ¼ş·ÖÀëÁË¡£
+```mysql
+// inner¿ÉÒÔÊ¡ÂÔµÄ£¬´ø×ÅinnerÄ¿µÄÊÇ¿É¶ÁĞÔºÃÒ»Ğ©¡£
+select 
+	e.ename,d.dname
+from
+	emp e
+inner join
+	dept d
+on
+	e.deptno = d.deptno;
 
-	+--------+------------+
-	| ename  | dname      |
-	+--------+------------+
-	| CLARK  | ACCOUNTING |
-	| KING   | ACCOUNTING |
-	| MILLER | ACCOUNTING |
-	| SMITH  | RESEARCH   |
-	| JONES  | RESEARCH   |
-	| SCOTT  | RESEARCH   |
-	| ADAMS  | RESEARCH   |
-	| FORD   | RESEARCH   |
-	| ALLEN  | SALES      |
-	| WARD   | SALES      |
-	| MARTIN | SALES      |
-	| BLAKE  | SALES      |
-	| TURNER | SALES      |
-	| JAMES  | SALES      |
-	+--------+------------+
+Óï·¨£º
+	...
+		A
+	join
+		B
+	on
+		Á¬½ÓÌõ¼ş
+	where
+		...
+
+SQL99Óï·¨½á¹¹¸üÇåÎúÒ»Ğ©£º±íµÄÁ¬½ÓÌõ¼şºÍºóÀ´µÄwhereÌõ¼ş·ÖÀëÁË¡£
+
++--------+------------+
+| ename  | dname      |
++--------+------------+
+| CLARK  | ACCOUNTING |
+| KING   | ACCOUNTING |
+| MILLER | ACCOUNTING |
+| SMITH  | RESEARCH   |
+| JONES  | RESEARCH   |
+| SCOTT  | RESEARCH   |
+| ADAMS  | RESEARCH   |
+| FORD   | RESEARCH   |
+| ALLEN  | SALES      |
+| WARD   | SALES      |
+| MARTIN | SALES      |
+| BLAKE  | SALES      |
+| TURNER | SALES      |
+| JAMES  | SALES      |
++--------+------------+
+```
 
 2.6¡¢ÄÚÁ¬½ÓÖ®·ÇµÈÖµÁ¬½Ó£º×î´óµÄÌØµãÊÇ£ºÁ¬½ÓÌõ¼şÖĞµÄ¹ØÏµÊÇ·ÇµÈÁ¿¹ØÏµ¡£
 
 °¸Àı£ºÕÒ³öÃ¿¸öÔ±¹¤µÄ¹¤×ÊµÈ¼¶£¬ÒªÇóÏÔÊ¾Ô±¹¤Ãû¡¢¹¤×Ê¡¢¹¤×ÊµÈ¼¶¡£
+
+```mysql
 mysql> select ename,sal from emp; e
 +--------+---------+
 | ename  | sal     |
@@ -287,10 +296,13 @@ on
 | FORD   | 3000.00 |     4 |
 | MILLER | 1300.00 |     2 |
 +--------+---------+-------+
+```
 
 2.7¡¢×ÔÁ¬½Ó£º×î´óµÄÌØµãÊÇ£ºÒ»ÕÅ±í¿´×öÁ½ÕÅ±í¡£×Ô¼ºÁ¬½Ó×Ô¼º¡£
 
 °¸Àı£ºÕÒ³öÃ¿¸öÔ±¹¤µÄÉÏ¼¶Áìµ¼£¬ÒªÇóÏÔÊ¾Ô±¹¤ÃûºÍ¶ÔÓ¦µÄÁìµ¼Ãû¡£
+
+```mysql
 mysql> select empno,ename,mgr from emp;
 emp a Ô±¹¤±í
 +-------+--------+------+
@@ -351,6 +363,7 @@ on
 | FORD   | JONES  |
 | MILLER | CLARK  |
 +--------+--------+
+```
 
 2.8¡¢ÍâÁ¬½Ó£¿
 	
@@ -359,7 +372,7 @@ on
 	ÄÚÁ¬½Ó£º
 		¼ÙÉèAºÍB±í½øĞĞÁ¬½Ó£¬Ê¹ÓÃÄÚÁ¬½ÓµÄ»°£¬·²ÊÇA±íºÍB±íÄÜ¹»Æ¥ÅäÉÏµÄ¼ÇÂ¼²éÑ¯³öÀ´£¬Õâ¾ÍÊÇÄÚÁ¬½Ó¡£
 		ABÁ½ÕÅ±íÃ»ÓĞÖ÷¸±Ö®·Ö£¬Á½ÕÅ±íÊÇÆ½µÈµÄ¡£
-
+	
 	ÍâÁ¬½Ó£º
 		¼ÙÉèAºÍB±í½øĞĞÁ¬½Ó£¬Ê¹ÓÃÍâÁ¬½ÓµÄ»°£¬ABÁ½ÕÅ±íÖĞÓĞÒ»ÕÅ±íÊÇÖ÷±í£¬Ò»ÕÅ±íÊÇ¸±±í£¬Ö÷Òª²éÑ¯Ö÷±íÖĞ
 		µÄÊı¾İ£¬ÉÓ´ø×Å²éÑ¯¸±±í£¬µ±¸±±íÖĞµÄÊı¾İÃ»ÓĞºÍÖ÷±íÖĞµÄÊı¾İÆ¥ÅäÉÏ£¬¸±±í×Ô¶¯Ä£Äâ³öNULLÓëÖ®Æ¥Åä¡£
@@ -367,11 +380,12 @@ on
 	ÍâÁ¬½ÓµÄ·ÖÀà£¿
 		×óÍâÁ¬½Ó£¨×óÁ¬½Ó£©£º±íÊ¾×ó±ßµÄÕâÕÅ±íÊÇÖ÷±í¡£
 		ÓÒÍâÁ¬½Ó£¨ÓÒÁ¬½Ó£©£º±íÊ¾ÓÒ±ßµÄÕâÕÅ±íÊÇÖ÷±í¡£
-
-		×óÁ¬½ÓÓĞÓÒÁ¬½ÓµÄĞ´·¨£¬ÓÒÁ¬½ÓÒ²»áÓĞ¶ÔÓ¦µÄ×óÁ¬½ÓµÄĞ´·¨¡£
 	
+		×óÁ¬½ÓÓĞÓÒÁ¬½ÓµÄĞ´·¨£¬ÓÒÁ¬½ÓÒ²»áÓĞ¶ÔÓ¦µÄ×óÁ¬½ÓµÄĞ´·¨¡£
+
 °¸Àı£ºÕÒ³öÃ¿¸öÔ±¹¤µÄÉÏ¼¶Áìµ¼£¿£¨ËùÓĞÔ±¹¤±ØĞëÈ«²¿²éÑ¯³öÀ´¡££©
 
+```mysql
 emp a Ô±¹¤±í
 +-------+--------+------+
 | empno | ename  | mgr  |
@@ -471,10 +485,13 @@ on
 | FORD   | JONES |
 | MILLER | CLARK |
 +--------+-------+
+```
 
 ÍâÁ¬½Ó×îÖØÒªµÄÌØµãÊÇ£ºÖ÷±íµÄÊı¾İÎŞÌõ¼şµÄÈ«²¿²éÑ¯³öÀ´¡£
 
 °¸Àı£ºÕÒ³öÄÄ¸ö²¿ÃÅÃ»ÓĞÔ±¹¤£¿
+
+```mysql
 EMP±í
 +-------+--------+-----------+------+------------+---------+---------+--------+
 | EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL     | COMM    | DEPTNO |
@@ -520,9 +537,12 @@ where
 +--------+------------+--------+
 |     40 | OPERATIONS | BOSTON |
 +--------+------------+--------+
+```
 
 2.9¡¢ÈıÕÅ±íÔõÃ´Á¬½Ó²éÑ¯£¿
 °¸Àı£ºÕÒ³öÃ¿Ò»¸öÔ±¹¤µÄ²¿ÃÅÃû³ÆÒÔ¼°¹¤×ÊµÈ¼¶¡£
+
+```mysql
 EMP e
 +-------+--------+---------+--------+
 | empno | ename  | sal     | deptno |
@@ -571,40 +591,45 @@ SALGRADE s
 		C
 	on
 		...
-	
-	±íÊ¾£ºA±íºÍB±íÏÈ½øĞĞ±íÁ¬½Ó£¬Á¬½ÓÖ®ºóA±í¼ÌĞøºÍC±í½øĞĞÁ¬½Ó¡£
+```
 
-	select 
-		e.ename,d.dname,s.grade
-	from
-		emp e
-	join
-		dept d
-	on
-		e.deptno = d.deptno
-	join
-		salgrade s
-	on
-		e.sal between s.losal and s.hisal;
-	
-	+--------+------------+-------+
-	| ename  | dname      | grade |
-	+--------+------------+-------+
-	| SMITH  | RESEARCH   |     1 |
-	| ALLEN  | SALES      |     3 |
-	| WARD   | SALES      |     2 |
-	| JONES  | RESEARCH   |     4 |
-	| MARTIN | SALES      |     2 |
-	| BLAKE  | SALES      |     4 |
-	| CLARK  | ACCOUNTING |     4 |
-	| SCOTT  | RESEARCH   |     4 |
-	| KING   | ACCOUNTING |     5 |
-	| TURNER | SALES      |     3 |
-	| ADAMS  | RESEARCH   |     1 |
-	| JAMES  | SALES      |     1 |
-	| FORD   | RESEARCH   |     4 |
-	| MILLER | ACCOUNTING |     2 |
-	+--------+------------+-------+
+?	
+
+```mysql
+±íÊ¾£ºA±íºÍB±íÏÈ½øĞĞ±íÁ¬½Ó£¬Á¬½ÓÖ®ºóA±í¼ÌĞøºÍC±í½øĞĞÁ¬½Ó¡£
+
+select 
+	e.ename,d.dname,s.grade
+from
+	emp e
+join
+	dept d
+on
+	e.deptno = d.deptno
+join
+	salgrade s
+on
+	e.sal between s.losal and s.hisal;
+
++--------+------------+-------+
+| ename  | dname      | grade |
++--------+------------+-------+
+| SMITH  | RESEARCH   |     1 |
+| ALLEN  | SALES      |     3 |
+| WARD   | SALES      |     2 |
+| JONES  | RESEARCH   |     4 |
+| MARTIN | SALES      |     2 |
+| BLAKE  | SALES      |     4 |
+| CLARK  | ACCOUNTING |     4 |
+| SCOTT  | RESEARCH   |     4 |
+| KING   | ACCOUNTING |     5 |
+| TURNER | SALES      |     3 |
+| ADAMS  | RESEARCH   |     1 |
+| JAMES  | SALES      |     1 |
+| FORD   | RESEARCH   |     4 |
+| MILLER | ACCOUNTING |     2 |
++--------+------------+-------+
+```
 
 °¸Àı£ºÕÒ³öÃ¿Ò»¸öÔ±¹¤µÄ²¿ÃÅÃû³Æ¡¢¹¤×ÊµÈ¼¶¡¢ÒÔ¼°ÉÏ¼¶Áìµ¼¡£
 	select 
@@ -624,24 +649,26 @@ SALGRADE s
 	on
 		e.mgr = e1.empno;
 
-	+--------+------------+-------+-------+
-	| Ô±¹¤      | dname      | grade | Áìµ¼    |
-	+--------+------------+-------+-------+
-	| SMITH  | RESEARCH   |     1 | FORD  |
-	| ALLEN  | SALES      |     3 | BLAKE |
-	| WARD   | SALES      |     2 | BLAKE |
-	| JONES  | RESEARCH   |     4 | KING  |
-	| MARTIN | SALES      |     2 | BLAKE |
-	| BLAKE  | SALES      |     4 | KING  |
-	| CLARK  | ACCOUNTING |     4 | KING  |
-	| SCOTT  | RESEARCH   |     4 | JONES |
-	| KING   | ACCOUNTING |     5 | NULL  |
-	| TURNER | SALES      |     3 | BLAKE |
-	| ADAMS  | RESEARCH   |     1 | SCOTT |
-	| JAMES  | SALES      |     1 | BLAKE |
-	| FORD   | RESEARCH   |     4 | JONES |
-	| MILLER | ACCOUNTING |     2 | CLARK |
-	+--------+------------+-------+-------+
+```mysql
++--------+------------+-------+-------+
+| Ô±¹¤      | dname      | grade | Áìµ¼    |
++--------+------------+-------+-------+
+| SMITH  | RESEARCH   |     1 | FORD  |
+| ALLEN  | SALES      |     3 | BLAKE |
+| WARD   | SALES      |     2 | BLAKE |
+| JONES  | RESEARCH   |     4 | KING  |
+| MARTIN | SALES      |     2 | BLAKE |
+| BLAKE  | SALES      |     4 | KING  |
+| CLARK  | ACCOUNTING |     4 | KING  |
+| SCOTT  | RESEARCH   |     4 | JONES |
+| KING   | ACCOUNTING |     5 | NULL  |
+| TURNER | SALES      |     3 | BLAKE |
+| ADAMS  | RESEARCH   |     1 | SCOTT |
+| JAMES  | SALES      |     1 | BLAKE |
+| FORD   | RESEARCH   |     4 | JONES |
+| MILLER | ACCOUNTING |     2 | CLARK |
++--------+------------+-------+-------+
+```
 
 3¡¢×Ó²éÑ¯
 
@@ -661,14 +688,22 @@ SALGRADE s
 select * from emp where sal > avg(sal); //´íÎóµÄĞ´·¨£¬whereºóÃæ²»ÄÜÖ±½ÓÊ¹ÓÃ·Ö×éº¯Êı¡£
 
 µÚÒ»²½£ºÕÒ³öÆ½¾ùĞ½×Ê
-	select avg(sal) from emp;
+	
+
+```mysql
+select avg(sal) from emp;
 	+-------------+
 	| avg(sal)    |
 	+-------------+
 	| 2073.214286 |
 	+-------------+
+```
+
 µÚ¶ş²½£ºwhere¹ıÂË
-	select * from emp where sal > 2073.214286;
+	
+
+```mysql
+select * from emp where sal > 2073.214286;
 	+-------+-------+-----------+------+------------+---------+------+--------+
 	| EMPNO | ENAME | JOB       | MGR  | HIREDATE   | SAL     | COMM | DEPTNO |
 	+-------+-------+-----------+------+------------+---------+------+--------+
@@ -679,12 +714,16 @@ select * from emp where sal > avg(sal); //´íÎóµÄĞ´·¨£¬whereºóÃæ²»ÄÜÖ±½ÓÊ¹ÓÃ·Ö×éº
 	|  7839 | KING  | PRESIDENT | NULL | 1981-11-17 | 5000.00 | NULL |     10 |
 	|  7902 | FORD  | ANALYST   | 7566 | 1981-12-03 | 3000.00 | NULL |     20 |
 	+-------+-------+-----------+------+------------+---------+------+--------+
+```
+
 µÚÒ»²½ºÍµÚ¶ş²½ºÏ²¢£º
 	select * from emp where sal > (select avg(sal) from emp);
 
 3.3¡¢fromºóÃæÇ¶Ì××Ó²éÑ¯
 
 °¸Àı£ºÕÒ³öÃ¿¸ö²¿ÃÅÆ½¾ùĞ½Ë®µÄµÈ¼¶¡£
+
+```mysql
 µÚÒ»²½£ºÕÒ³öÃ¿¸ö²¿ÃÅÆ½¾ùĞ½Ë®£¨°´ÕÕ²¿ÃÅ±àºÅ·Ö×é£¬ÇósalµÄÆ½¾ùÖµ£©
 select deptno,avg(sal) as avgsal from emp group by deptno;
 +--------+-------------+
@@ -711,9 +750,11 @@ on
 |     10 | 2916.666667 |     4 |
 |     20 | 2175.000000 |     4 |
 +--------+-------------+-------+
-
+```
 
 °¸Àı£ºÕÒ³öÃ¿¸ö²¿ÃÅÆ½¾ùµÄĞ½Ë®µÈ¼¶¡£
+
+```mysql
 µÚÒ»²½£ºÕÒ³öÃ¿¸öÔ±¹¤µÄĞ½Ë®µÈ¼¶¡£
 select e.ename,e.sal,e.deptno,s.grade from emp e join salgrade s on e.sal between s.losal and s.hisal;
 +--------+---------+--------+-------+
@@ -753,10 +794,12 @@ group by
 |     20 |       2.8000 |
 |     30 |       2.5000 |
 +--------+--------------+
+```
 
 3.4¡¢ÔÚselectºóÃæÇ¶Ì××Ó²éÑ¯¡£
 °¸Àı£ºÕÒ³öÃ¿¸öÔ±¹¤ËùÔÚµÄ²¿ÃÅÃû³Æ£¬ÒªÇóÏÔÊ¾Ô±¹¤ÃûºÍ²¿ÃÅÃû¡£
 
+```mysql
 select 
 	e.ename,d.dname
 from
@@ -789,10 +832,13 @@ from
 | FORD   | RESEARCH   |
 | MILLER | ACCOUNTING |
 +--------+------------+
+```
 
 4¡¢union £¨¿ÉÒÔ½«²éÑ¯½á¹û¼¯Ïà¼Ó£©
 
 °¸Àı£ºÕÒ³ö¹¤×÷¸ÚÎ»ÊÇSALESMANºÍMANAGERµÄÔ±¹¤£¿
+
+```mysql
 µÚÒ»ÖÖ£ºselect ename,job from emp where job = 'MANAGER' or job = 'SALESMAN';
 µÚ¶şÖÖ£ºselect ename,job from emp where job in('MANAGER','SALESMAN');
 +--------+----------+
@@ -854,6 +900,7 @@ mysql> select ename,sal from emp
     -> union
     -> select dname from dept;
 ERROR 1222 (21000): The used SELECT statements have a different number of columns
+```
 
 5¡¢limit (ÖØµãÖĞµÄÖØµã£¬ÒÔºó·ÖÒ³²éÑ¯È«¿¿ËüÁË¡£)
 
@@ -866,11 +913,13 @@ ERROR 1222 (21000): The used SELECT statements have a different number of column
 		startIndex±íÊ¾ÆğÊ¼Î»ÖÃ£¬´Ó0¿ªÊ¼£¬0±íÊ¾µÚÒ»ÌõÊı¾İ¡£
 		length±íÊ¾È¡¼¸¸ö
 	
-	°¸Àı£ºÈ¡³ö¹¤×ÊÇ°5ÃûµÄÔ±¹¤£¨Ë¼Â·£º½µĞòÈ¡Ç°5¸ö£©
-		select ename,sal from emp order by sal desc;
-		È¡Ç°5¸ö£º
-			select ename,sal from emp order by sal desc limit 0, 5;
-			select ename,sal from emp order by sal desc limit 5;
+```mysql
+°¸Àı£ºÈ¡³ö¹¤×ÊÇ°5ÃûµÄÔ±¹¤£¨Ë¼Â·£º½µĞòÈ¡Ç°5¸ö£©
+	select ename,sal from emp order by sal desc;
+	È¡Ç°5¸ö£º
+		select ename,sal from emp order by sal desc limit 0, 5;
+		select ename,sal from emp order by sal desc limit 5;
+```
 
 5.4¡¢limitÊÇsqlÓï¾ä×îºóÖ´ĞĞµÄÒ»¸ö»·½Ú£º
 	select		5
@@ -889,7 +938,10 @@ ERROR 1222 (21000): The used SELECT statements have a different number of column
 		...;
 
 5.5¡¢°¸Àı£ºÕÒ³ö¹¤×ÊÅÅÃûÔÚµÚ4µ½µÚ9ÃûµÄÔ±¹¤£¿
-	select ename,sal from emp order by sal desc limit 3,6;
+	
+
+```mysql
+select ename,sal from emp order by sal desc limit 3,6;
 	+--------+---------+
 	| ename  | sal     |
 	+--------+---------+
@@ -900,6 +952,7 @@ ERROR 1222 (21000): The used SELECT statements have a different number of column
 	| TURNER | 1500.00 |
 	| MILLER | 1300.00 |
 	+--------+---------+
+```
 
 5.6¡¢Í¨ÓÃµÄ±ê×¼·ÖÒ³sql£¿
 
@@ -925,154 +978,158 @@ java´úÂë{
 
 6¡¢´´½¨±í£º
 	
-	½¨±íÓï¾äµÄÓï·¨¸ñÊ½£º
-		create table ±íÃû(
-			×Ö¶ÎÃû1 Êı¾İÀàĞÍ,
-			×Ö¶ÎÃû2 Êı¾İÀàĞÍ,
-			×Ö¶ÎÃû3 Êı¾İÀàĞÍ,
-			....
-		);
-	
-	¹ØÓÚMySQLµ±ÖĞ×Ö¶ÎµÄÊı¾İÀàĞÍ£¿ÒÔÏÂÖ»Ëµ³£¼ûµÄ
-		int		ÕûÊıĞÍ(javaÖĞµÄint)
-		bigint	³¤ÕûĞÍ(javaÖĞµÄlong)
-		float		¸¡µãĞÍ(javaÖĞµÄfloat double)
-		char		¶¨³¤×Ö·û´®(String)
-		varchar	¿É±ä³¤×Ö·û´®(StringBuffer/StringBuilder)
-		date		ÈÕÆÚÀàĞÍ £¨¶ÔÓ¦JavaÖĞµÄjava.sql.DateÀàĞÍ£©
-		BLOB		¶ş½øÖÆ´ó¶ÔÏó£¨´æ´¢Í¼Æ¬¡¢ÊÓÆµµÈÁ÷Ã½ÌåĞÅÏ¢£© Binary Large OBject £¨¶ÔÓ¦javaÖĞµÄObject£©
-		CLOB		×Ö·û´ó¶ÔÏó£¨´æ´¢½Ï´óÎÄ±¾£¬±ÈÈç£¬¿ÉÒÔ´æ´¢4GµÄ×Ö·û´®¡££© Character Large OBject£¨¶ÔÓ¦javaÖĞµÄObject£©
-		......
-	
-	charºÍvarcharÔõÃ´Ñ¡Ôñ£¿
-		ÔÚÊµ¼ÊµÄ¿ª·¢ÖĞ£¬µ±Ä³¸ö×Ö¶ÎÖĞµÄÊı¾İ³¤¶È²»·¢Éú¸Ä±äµÄÊ±ºò£¬ÊÇ¶¨³¤µÄ£¬ÀıÈç£ºĞÔ±ğ¡¢ÉúÈÕµÈ¶¼ÊÇ²ÉÓÃchar¡£
-		µ±Ò»¸ö×Ö¶ÎµÄÊı¾İ³¤¶È²»È·¶¨£¬ÀıÈç£º¼ò½é¡¢ĞÕÃûµÈ¶¼ÊÇ²ÉÓÃvarchar¡£
-	
-	BLOBºÍCLOBÀàĞÍµÄÊ¹ÓÃ£¿
-		µçÓ°±í: t_movie
-		id(int)	name(varchar)		playtime(date/char)		haibao(BLOB)		history(CLOB)
-		----------------------------------------------------------------------------------------
-		1			Ö©ÖëÏÀ	
-		2
-		3
+```mysql
+½¨±íÓï¾äµÄÓï·¨¸ñÊ½£º
+	create table ±íÃû(
+		×Ö¶ÎÃû1 Êı¾İÀàĞÍ,
+		×Ö¶ÎÃû2 Êı¾İÀàĞÍ,
+		×Ö¶ÎÃû3 Êı¾İÀàĞÍ,
+		....
+	);
 
-	±íÃûÔÚÊı¾İ¿âµ±ÖĞÒ»°ã½¨ÒéÒÔ£ºt_»òÕßtbl_¿ªÊ¼¡£
+¹ØÓÚMySQLµ±ÖĞ×Ö¶ÎµÄÊı¾İÀàĞÍ£¿ÒÔÏÂÖ»Ëµ³£¼ûµÄ
+	int		ÕûÊıĞÍ(javaÖĞµÄint)
+	bigint	³¤ÕûĞÍ(javaÖĞµÄlong)
+	float		¸¡µãĞÍ(javaÖĞµÄfloat double)
+	char		¶¨³¤×Ö·û´®(String)
+	varchar	¿É±ä³¤×Ö·û´®(StringBuffer/StringBuilder)
+	date		ÈÕÆÚÀàĞÍ £¨¶ÔÓ¦JavaÖĞµÄjava.sql.DateÀàĞÍ£©
+	BLOB		¶ş½øÖÆ´ó¶ÔÏó£¨´æ´¢Í¼Æ¬¡¢ÊÓÆµµÈÁ÷Ã½ÌåĞÅÏ¢£© Binary Large OBject £¨¶ÔÓ¦javaÖĞµÄObject£©
+	CLOB		×Ö·û´ó¶ÔÏó£¨´æ´¢½Ï´óÎÄ±¾£¬±ÈÈç£¬¿ÉÒÔ´æ´¢4GµÄ×Ö·û´®¡££© Character Large OBject£¨¶ÔÓ¦javaÖĞµÄObject£©
+	......
 
-	´´½¨Ñ§Éú±í£º
-		Ñ§ÉúĞÅÏ¢°üÀ¨£º
-			Ñ§ºÅ¡¢ĞÕÃû¡¢ĞÔ±ğ¡¢°à¼¶±àºÅ¡¢ÉúÈÕ
-			Ñ§ºÅ£ºbigint
-			ĞÕÃû£ºvarchar
-			ĞÔ±ğ£ºchar
-			°à¼¶±àºÅ£ºint
-			ÉúÈÕ£ºchar
-		
-		create table t_student(
-			no bigint,
-			name varchar(255),
-			sex char(1),
-			classno varchar(255),
-			birth char(10)
-		);
+charºÍvarcharÔõÃ´Ñ¡Ôñ£¿
+	ÔÚÊµ¼ÊµÄ¿ª·¢ÖĞ£¬µ±Ä³¸ö×Ö¶ÎÖĞµÄÊı¾İ³¤¶È²»·¢Éú¸Ä±äµÄÊ±ºò£¬ÊÇ¶¨³¤µÄ£¬ÀıÈç£ºĞÔ±ğ¡¢ÉúÈÕµÈ¶¼ÊÇ²ÉÓÃchar¡£
+	µ±Ò»¸ö×Ö¶ÎµÄÊı¾İ³¤¶È²»È·¶¨£¬ÀıÈç£º¼ò½é¡¢ĞÕÃûµÈ¶¼ÊÇ²ÉÓÃvarchar¡£
+
+BLOBºÍCLOBÀàĞÍµÄÊ¹ÓÃ£¿
+	µçÓ°±í: t_movie
+	id(int)	name(varchar)		playtime(date/char)		haibao(BLOB)		history(CLOB)
+	----------------------------------------------------------------------------------------
+	1			Ö©ÖëÏÀ	
+	2
+	3
+
+±íÃûÔÚÊı¾İ¿âµ±ÖĞÒ»°ã½¨ÒéÒÔ£ºt_»òÕßtbl_¿ªÊ¼¡£
+
+´´½¨Ñ§Éú±í£º
+	Ñ§ÉúĞÅÏ¢°üÀ¨£º
+		Ñ§ºÅ¡¢ĞÕÃû¡¢ĞÔ±ğ¡¢°à¼¶±àºÅ¡¢ÉúÈÕ
+		Ñ§ºÅ£ºbigint
+		ĞÕÃû£ºvarchar
+		ĞÔ±ğ£ºchar
+		°à¼¶±àºÅ£ºint
+		ÉúÈÕ£ºchar
+	
+	create table t_student(
+		no bigint,
+		name varchar(255),
+		sex char(1),
+		classno varchar(255),
+		birth char(10)
+	);
+```
 
 7¡¢insertÓï¾ä²åÈëÊı¾İ
 	Óï·¨¸ñÊ½£º
 		insert into ±íÃû(×Ö¶ÎÃû1,×Ö¶ÎÃû2,×Ö¶ÎÃû3,....) values(Öµ1,Öµ2,Öµ3,....)
 		ÒªÇó£º×Ö¶ÎµÄÊıÁ¿ºÍÖµµÄÊıÁ¿ÏàÍ¬£¬²¢ÇÒÊı¾İÀàĞÍÒª¶ÔÓ¦ÏàÍ¬¡£
 	
-	insert into t_student(no,name,sex,classno,birth) values(1,'zhangsan','1','gaosan1ban');
-	ERROR 1136 (21S01): Column count doesn't match value count at row 1
+```mysql
+insert into t_student(no,name,sex,classno,birth) values(1,'zhangsan','1','gaosan1ban');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
 
-	insert into t_student(no,name,sex,classno,birth) values(1,'zhangsan','1','gaosan1ban', '1950-10-12');
+insert into t_student(no,name,sex,classno,birth) values(1,'zhangsan','1','gaosan1ban', '1950-10-12');
 
-	mysql> select * from t_student;
-	+------+----------+------+------------+------------+
-	| no   | name     | sex  | classno    | birth      |
-	+------+----------+------+------------+------------+
-	|    1 | zhangsan | 1    | gaosan1ban | 1950-10-12 |
-	+------+----------+------+------------+------------+
+mysql> select * from t_student;
++------+----------+------+------------+------------+
+| no   | name     | sex  | classno    | birth      |
++------+----------+------+------------+------------+
+|    1 | zhangsan | 1    | gaosan1ban | 1950-10-12 |
++------+----------+------+------------+------------+
 
-	insert into t_student(name,sex,classno,birth,no) values('lisi','1','gaosan1ban', '1950-10-12',2);
+insert into t_student(name,sex,classno,birth,no) values('lisi','1','gaosan1ban', '1950-10-12',2);
 
-	mysql> select * from t_student;
-	+------+----------+------+------------+------------+
-	| no   | name     | sex  | classno    | birth      |
-	+------+----------+------+------------+------------+
-	|    1 | zhangsan | 1    | gaosan1ban | 1950-10-12 |
-	|    2 | lisi     | 1    | gaosan1ban | 1950-10-12 |
-	+------+----------+------+------------+------------+
+mysql> select * from t_student;
++------+----------+------+------------+------------+
+| no   | name     | sex  | classno    | birth      |
++------+----------+------+------------+------------+
+|    1 | zhangsan | 1    | gaosan1ban | 1950-10-12 |
+|    2 | lisi     | 1    | gaosan1ban | 1950-10-12 |
++------+----------+------+------------+------------+
 
-	insert into t_student(name) values('wangwu'); // ³ıname×Ö¶ÎÖ®Íâ£¬Ê£ÏÂµÄËùÓĞ×Ö¶Î×Ô¶¯²åÈëNULL¡£
-	mysql> select * from t_student;
-	+------+----------+------+------------+------------+
-	| no   | name     | sex  | classno    | birth      |
-	+------+----------+------+------------+------------+
-	|    1 | zhangsan | 1    | gaosan1ban | 1950-10-12 |
-	|    2 | lisi     | 1    | gaosan1ban | 1950-10-12 |
-	| NULL | wangwu   | NULL | NULL       | NULL       |
-	+------+----------+------+------------+------------+
+insert into t_student(name) values('wangwu'); // ³ıname×Ö¶ÎÖ®Íâ£¬Ê£ÏÂµÄËùÓĞ×Ö¶Î×Ô¶¯²åÈëNULL¡£
+mysql> select * from t_student;
++------+----------+------+------------+------------+
+| no   | name     | sex  | classno    | birth      |
++------+----------+------+------------+------------+
+|    1 | zhangsan | 1    | gaosan1ban | 1950-10-12 |
+|    2 | lisi     | 1    | gaosan1ban | 1950-10-12 |
+| NULL | wangwu   | NULL | NULL       | NULL       |
++------+----------+------+------------+------------+
 
-	insert into t_student(no) values(3); 
-	mysql> select * from t_student;
-	+------+----------+------+------------+------------+
-	| no   | name     | sex  | classno    | birth      |
-	+------+----------+------+------------+------------+
-	|    1 | zhangsan | 1    | gaosan1ban | 1950-10-12 |
-	|    2 | lisi     | 1    | gaosan1ban | 1950-10-12 |
-	| NULL | wangwu   | NULL | NULL       | NULL       |
-	|    3 | NULL     | NULL | NULL       | NULL       |
-	+------+----------+------+------------+------------+
+insert into t_student(no) values(3); 
+mysql> select * from t_student;
++------+----------+------+------------+------------+
+| no   | name     | sex  | classno    | birth      |
++------+----------+------+------------+------------+
+|    1 | zhangsan | 1    | gaosan1ban | 1950-10-12 |
+|    2 | lisi     | 1    | gaosan1ban | 1950-10-12 |
+| NULL | wangwu   | NULL | NULL       | NULL       |
+|    3 | NULL     | NULL | NULL       | NULL       |
++------+----------+------+------------+------------+
 
-	drop table if exists t_student; // µ±Õâ¸ö±í´æÔÚµÄ»°É¾³ı¡£
-	create table t_student(
-		no bigint,
-		name varchar(255),
-		sex char(1) default 1,
-		classno varchar(255),
-		birth char(10)
-	);
+drop table if exists t_student; // µ±Õâ¸ö±í´æÔÚµÄ»°É¾³ı¡£
+create table t_student(
+	no bigint,
+	name varchar(255),
+	sex char(1) default 1,
+	classno varchar(255),
+	birth char(10)
+);
 
-	insert into t_student(name) values('zhangsan');
-	mysql> select * from t_student;
-	+------+----------+------+---------+-------+
-	| no   | name     | sex  | classno | birth |
-	+------+----------+------+---------+-------+
-	| NULL | zhangsan | 1    | NULL    | NULL  |
-	+------+----------+------+---------+-------+
+insert into t_student(name) values('zhangsan');
+mysql> select * from t_student;
++------+----------+------+---------+-------+
+| no   | name     | sex  | classno | birth |
++------+----------+------+---------+-------+
+| NULL | zhangsan | 1    | NULL    | NULL  |
++------+----------+------+---------+-------+
 
-	ĞèÒª×¢ÒâµÄµØ·½£º
-		µ±Ò»ÌõinsertÓï¾äÖ´ĞĞ³É¹¦Ö®ºó£¬±í¸ñµ±ÖĞ±ØÈ»»á¶àÒ»ĞĞ¼ÇÂ¼¡£
-		¼´Ê¹¶àµÄÕâÒ»ĞĞ¼ÇÂ¼µ±ÖĞÄ³Ğ©×Ö¶ÎÊÇNULL£¬ºóÆÚÒ²Ã»ÓĞ°ì·¨ÔÚÖ´ĞĞ
-		insertÓï¾ä²åÈëÊı¾İÁË£¬Ö»ÄÜÊ¹ÓÃupdate½øĞĞ¸üĞÂ¡£
-	
-	// ×Ö¶Î¿ÉÒÔÊ¡ÂÔ²»Ğ´£¬µ«ÊÇºóÃæµÄvalue¶ÔÊıÁ¿ºÍË³Ğò¶¼ÓĞÒªÇó¡£
-	insert into t_student values(1,'jack','0','gaosan2ban','1986-10-23');
-	mysql> select * from t_student;
-	+------+----------+------+------------+------------+
-	| no   | name     | sex  | classno    | birth      |
-	+------+----------+------+------------+------------+
-	| NULL | zhangsan | 1    | NULL       | NULL       |
-	|    1 | jack     | 0    | gaosan2ban | 1986-10-23 |
-	+------+----------+------+------------+------------+
+ĞèÒª×¢ÒâµÄµØ·½£º
+	µ±Ò»ÌõinsertÓï¾äÖ´ĞĞ³É¹¦Ö®ºó£¬±í¸ñµ±ÖĞ±ØÈ»»á¶àÒ»ĞĞ¼ÇÂ¼¡£
+	¼´Ê¹¶àµÄÕâÒ»ĞĞ¼ÇÂ¼µ±ÖĞÄ³Ğ©×Ö¶ÎÊÇNULL£¬ºóÆÚÒ²Ã»ÓĞ°ì·¨ÔÚÖ´ĞĞ
+	insertÓï¾ä²åÈëÊı¾İÁË£¬Ö»ÄÜÊ¹ÓÃupdate½øĞĞ¸üĞÂ¡£
 
-	insert into t_student values(1,'jack','0','gaosan2ban');
-	ERROR 1136 (21S01): Column count doesn't match value count at row 1
+// ×Ö¶Î¿ÉÒÔÊ¡ÂÔ²»Ğ´£¬µ«ÊÇºóÃæµÄvalue¶ÔÊıÁ¿ºÍË³Ğò¶¼ÓĞÒªÇó¡£
+insert into t_student values(1,'jack','0','gaosan2ban','1986-10-23');
+mysql> select * from t_student;
++------+----------+------+------------+------------+
+| no   | name     | sex  | classno    | birth      |
++------+----------+------+------------+------------+
+| NULL | zhangsan | 1    | NULL       | NULL       |
+|    1 | jack     | 0    | gaosan2ban | 1986-10-23 |
++------+----------+------+------------+------------+
 
-	// Ò»´Î²åÈë¶àĞĞÊı¾İ
-	insert into t_student
-		(no,name,sex,classno,birth) 
-	values
-		(3,'rose','1','gaosi2ban','1952-12-14'),(4,'laotie','1','gaosi2ban','1955-12-14');
+insert into t_student values(1,'jack','0','gaosan2ban');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
 
-	mysql> select * from t_student;
-	+------+----------+------+------------+------------+
-	| no   | name     | sex  | classno    | birth      |
-	+------+----------+------+------------+------------+
-	| NULL | zhangsan | 1    | NULL       | NULL       |
-	|    1 | jack     | 0    | gaosan2ban | 1986-10-23 |
-	|    3 | rose     | 1    | gaosi2ban  | 1952-12-14 |
-	|    4 | laotie   | 1    | gaosi2ban  | 1955-12-14 |
-	+------+----------+------+------------+------------+
+// Ò»´Î²åÈë¶àĞĞÊı¾İ
+insert into t_student
+	(no,name,sex,classno,birth) 
+values
+	(3,'rose','1','gaosi2ban','1952-12-14'),(4,'laotie','1','gaosi2ban','1955-12-14');
+
+mysql> select * from t_student;
++------+----------+------+------------+------------+
+| no   | name     | sex  | classno    | birth      |
++------+----------+------+------------+------------+
+| NULL | zhangsan | 1    | NULL       | NULL       |
+|    1 | jack     | 0    | gaosan2ban | 1986-10-23 |
+|    3 | rose     | 1    | gaosi2ban  | 1952-12-14 |
+|    4 | laotie   | 1    | gaosi2ban  | 1955-12-14 |
++------+----------+------+------------+------------+
+```
 
 8¡¢±íµÄ¸´ÖÆ
 	Óï·¨£º
@@ -1080,7 +1137,10 @@ java´úÂë{
 		½«²éÑ¯½á¹ûµ±×ö±í´´½¨³öÀ´¡£
 
 9¡¢½«²éÑ¯½á¹û²åÈëµ½Ò»ÕÅ±íÖĞ£¿
-	mysql> insert into dept1 select * from dept;
+	
+
+```mysql
+mysql> insert into dept1 select * from dept;
 	mysql> select * from dept1;
 	+--------+------------+----------+
 	| DEPTNO | DNAME      | LOC      |
@@ -1094,63 +1154,68 @@ java´úÂë{
 	|     30 | SALES      | CHICAGO  |
 	|     40 | OPERATIONS | BOSTON   |
 	+--------+------------+----------+
+```
 
 10¡¢ĞŞ¸ÄÊı¾İ£ºupdate
 
-	Óï·¨¸ñÊ½£º
-		update ±íÃû set ×Ö¶ÎÃû1=Öµ1,×Ö¶ÎÃû2=Öµ2... where Ìõ¼ş;
+```mysql
+Óï·¨¸ñÊ½£º
+	update ±íÃû set ×Ö¶ÎÃû1=Öµ1,×Ö¶ÎÃû2=Öµ2... where Ìõ¼ş;
 
-	×¢Òâ£ºÃ»ÓĞÌõ¼şÕûÕÅ±íÊı¾İÈ«²¿¸üĞÂ¡£
+×¢Òâ£ºÃ»ÓĞÌõ¼şÕûÕÅ±íÊı¾İÈ«²¿¸üĞÂ¡£
 
-	°¸Àı£º½«²¿ÃÅ10µÄLOCĞŞ¸ÄÎªSHANGHAI£¬½«²¿ÃÅÃû³ÆĞŞ¸ÄÎªRENSHIBU
-	update dept1 set loc = 'SHANGHAI', dname = 'RENSHIBU' where deptno = 10;
+°¸Àı£º½«²¿ÃÅ10µÄLOCĞŞ¸ÄÎªSHANGHAI£¬½«²¿ÃÅÃû³ÆĞŞ¸ÄÎªRENSHIBU
+update dept1 set loc = 'SHANGHAI', dname = 'RENSHIBU' where deptno = 10;
+mysql> select * from dept1;
++--------+------------+----------+
+| DEPTNO | DNAME      | LOC      |
++--------+------------+----------+
+|     10 | RENSHIBU   | SHANGHAI |
+|     20 | RESEARCH   | DALLAS   |
+|     30 | SALES      | CHICAGO  |
+|     40 | OPERATIONS | BOSTON   |
+|     10 | RENSHIBU   | SHANGHAI |
+|     20 | RESEARCH   | DALLAS   |
+|     30 | SALES      | CHICAGO  |
+|     40 | OPERATIONS | BOSTON   |
++--------+------------+----------+
+
+¸üĞÂËùÓĞ¼ÇÂ¼
+	update dept1 set loc = 'x', dname = 'y';
 	mysql> select * from dept1;
-	+--------+------------+----------+
-	| DEPTNO | DNAME      | LOC      |
-	+--------+------------+----------+
-	|     10 | RENSHIBU   | SHANGHAI |
-	|     20 | RESEARCH   | DALLAS   |
-	|     30 | SALES      | CHICAGO  |
-	|     40 | OPERATIONS | BOSTON   |
-	|     10 | RENSHIBU   | SHANGHAI |
-	|     20 | RESEARCH   | DALLAS   |
-	|     30 | SALES      | CHICAGO  |
-	|     40 | OPERATIONS | BOSTON   |
-	+--------+------------+----------+
+	+--------+-------+------+
+	| DEPTNO | DNAME | LOC  |
+	+--------+-------+------+
+	|     10 | y     | x    |
+	|     20 | y     | x    |
+	|     30 | y     | x    |
+	|     40 | y     | x    |
+	|     10 | y     | x    |
+	|     20 | y     | x    |
+	|     30 | y     | x    |
+	|     40 | y     | x    |
+	+--------+-------+------+
+```
 
-	¸üĞÂËùÓĞ¼ÇÂ¼
-		update dept1 set loc = 'x', dname = 'y';
-		mysql> select * from dept1;
-		+--------+-------+------+
-		| DEPTNO | DNAME | LOC  |
-		+--------+-------+------+
-		|     10 | y     | x    |
-		|     20 | y     | x    |
-		|     30 | y     | x    |
-		|     40 | y     | x    |
-		|     10 | y     | x    |
-		|     20 | y     | x    |
-		|     30 | y     | x    |
-		|     40 | y     | x    |
-		+--------+-------+------+
-	
 11¡¢É¾³ıÊı¾İ£¿
 	Óï·¨¸ñÊ½£º
 		delete from ±íÃû where Ìõ¼ş;
 	
-	×¢Òâ£ºÃ»ÓĞÌõ¼şÈ«²¿É¾³ı¡£
+```mysql
+×¢Òâ£ºÃ»ÓĞÌõ¼şÈ«²¿É¾³ı¡£
 
-	É¾³ı10²¿ÃÅÊı¾İ£¿
-		delete from dept1 where deptno = 10;
-	
-	É¾³ıËùÓĞ¼ÇÂ¼£¿
-		delete from dept1;
-	
-	ÔõÃ´É¾³ı´ó±íÖĞµÄÊı¾İ£¿£¨ÖØµã£©
-		truncate table ±íÃû; // ±í±»½Ø¶Ï£¬²»¿É»Ø¹ö¡£ÓÀ¾Ã¶ªÊ§¡£
-	É¾³ı±í£¿
-		drop table ±íÃû; // Õâ¸öÍ¨ÓÃ¡£
-		drop table if exists ±íÃû; // oracle²»Ö§³ÖÕâÖÖĞ´·¨¡£
+É¾³ı10²¿ÃÅÊı¾İ£¿
+	delete from dept1 where deptno = 10;
+
+É¾³ıËùÓĞ¼ÇÂ¼£¿
+	delete from dept1;
+
+ÔõÃ´É¾³ı´ó±íÖĞµÄÊı¾İ£¿£¨ÖØµã£©
+	truncate table ±íÃû; // ±í±»½Ø¶Ï£¬²»¿É»Ø¹ö¡£ÓÀ¾Ã¶ªÊ§¡£
+É¾³ı±í£¿
+	drop table ±íÃû; // Õâ¸öÍ¨ÓÃ¡£
+	drop table if exists ±íÃû; // oracle²»Ö§³ÖÕâÖÖĞ´·¨¡£
+```
 
 12¡¢¶ÔÓÚ±í½á¹¹µÄĞŞ¸Ä£¬ÕâÀï²»½²ÁË£¬´ó¼ÒÊ¹ÓÃ¹¤¾ßÍê³É¼´¿É£¬ÒòÎªÔÚÊµ¼Ê¿ª·¢ÖĞ±íÒ»µ©
 Éè¼ÆºÃÖ®ºó£¬¶Ô±í½á¹¹µÄĞŞ¸ÄÊÇºÜÉÙµÄ£¬ĞŞ¸Ä±í½á¹¹¾ÍÊÇ¶ÔÖ®Ç°µÄÉè¼Æ½øĞĞÁË·ñ¶¨£¬¼´Ê¹

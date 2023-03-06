@@ -43,28 +43,34 @@ MySQL
 	DCL（数据控制语言）: grant授权、revoke撤销权限等。
 
 4、导入数据（后期大家练习的时候使用这个演示的数据）
-	第一步：登录mysql数据库管理系统
-		dos命令窗口：
-			mysql -uroot -p333
-	第二步：查看有哪些数据库
-		show databases; (这个不是SQL语句，属于MySQL的命令。)
-		+--------------------+
-		| Database           |
-		+--------------------+
-		| information_schema |
-		| mysql              |
-		| performance_schema |
-		| test               |
-		+--------------------+
-	第三步：创建属于我们自己的数据库
-		create database bjpowernode; (这个不是SQL语句，属于MySQL的命令。)
-	第四步：使用bjpowernode数据
-		use bjpowernode; (这个不是SQL语句，属于MySQL的命令。)
-	第五步：查看当前使用的数据库中有哪些表？
-		show tables; (这个不是SQL语句，属于MySQL的命令。)
-	第六步：初始化数据
-		mysql> source D:\course\05-MySQL\resources\bjpowernode.sql
-	
+
+```mysql
+第一步：登录mysql数据库管理系统
+	dos命令窗口：
+		mysql -uroot -p333
+		     -u用户名 -p密码
+第二步：查看有哪些数据库
+	show databases; (这个不是SQL语句，属于MySQL的命令。)
+	+--------------------+
+	| Database           |
+	+--------------------+
+	| information_schema |
+	| mysql              |
+	| performance_schema |
+	| test               |
+	+--------------------+
+第三步：创建属于我们自己的数据库
+	create database bjpowernode; (这个不是SQL语句，属于MySQL的命令。)
+第四步：使用bjpowernode数据
+	use bjpowernode; (这个不是SQL语句，属于MySQL的命令。)
+第五步：查看当前使用的数据库中有哪些表？
+	show tables; (这个不是SQL语句，属于MySQL的命令。)
+第六步：初始化数据
+	mysql> source D:\course\xx.sql 
+
+```
+
+
 
 ```mysql
 注意：数据初始化完成之后，有三张表：
@@ -86,13 +92,16 @@ MySQL
 6、删除数据库：drop database bjpowernode;
 
 7、查看表结构：
-	+-----------------------+
-	| Tables_in_bjpowernode |
-	+-----------------------+
-	| dept                  |   (部门表)
-	| emp                   |   (员工表)
-	| salgrade              |   (工资等级表)
-	+-----------------------+
+
+```mysql
++-----------------------+
+| Tables_in_bjpowernode |
++-----------------------+
+| dept                  |   (部门表)
+| ep                   |   (员工表)
+| salgrade              |   (工资等级表)
++-----------------------+
+```
 
 
 ```mysql
@@ -131,6 +140,7 @@ mysql> desc salgrade;
 
 8、表中的数据？
 
+```mysql
 mysql> select * from emp;
 +-------+--------+-----------+------+------------+---------+---------+--------+
 | EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL     | COMM    | DEPTNO |
@@ -171,8 +181,11 @@ mysql> select * from salgrade;
 |     4 |  2001 |  3000 |
 |     5 |  3001 |  9999 |
 +-------+-------+-------+
+```
 
 9、常用命令？
+
+```mysql
 mysql> select database(); 查看当前使用的是哪个数据库
 +-------------+
 | database()  |
@@ -186,6 +199,7 @@ mysql> select version(); 查看mysql的版本号。
 +-----------+
 | 5.5.36    |
 +-----------+
+```
 
 \c   命令，结束一条语句。
 
@@ -479,12 +493,14 @@ as关键字可以省略？
 13、排序（升序、降序）
 
 按照工资升序，找出员工名和薪资？
-	select 
-		ename,sal 
-	from 
-		emp 
-	order by
-		sal;
+
+```mysql
+select 
+	ename,sal 
+from 
+	emp 
+order by
+	sal;
 +--------+---------+
 | ename  | sal     |
 +--------+---------+
@@ -503,6 +519,7 @@ as关键字可以省略？
 | SCOTT  | 3000.00 |
 | KING   | 5000.00 |
 +--------+---------+
+```
 
 注意：默认是升序。怎么指定升序或者降序呢？asc表示升序，desc表示降序。
 	select ename , sal from emp order by sal; // 升序
@@ -515,14 +532,17 @@ as关键字可以省略？
 	注意：越靠前的字段越能起到主导作用。只有当前面的字段无法完成排序的时候，才会启用后面的字段。
 
 找出工作岗位是SALESMAN的员工，并且要求按照薪资的降序排列。
-	select 
-		ename,job,sal
-	from
-		emp
-	where 
-		job = 'SALESMAN'
-	order by
-		sal desc;
+	
+
+```mysql
+select 
+	ename,job,sal
+from
+	emp
+where 
+	job = 'SALESMAN'
+order by
+	sal desc;
 +--------+----------+---------+
 | ename  | job      | sal     |
 +--------+----------+---------+
@@ -531,7 +551,9 @@ as关键字可以省略？
 | WARD   | SALESMAN | 1250.00 |
 | MARTIN | SALESMAN | 1250.00 |
 +--------+----------+---------+
-	
+```
+
+?	
 
 	select 
 		字段						3
