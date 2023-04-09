@@ -18,7 +18,6 @@ $$
 在简单的回归模型中，回归函数是解释变量的线性函数，回归模型则称为一无线性回归模型，表达式如下：
 $$
 y=\theta_0+\theta_1x+\varepsilon \\
-
 \begin{array}{l}
 \hat{y}=\theta_0+\theta_1x &&
 \theta_0 ：截距 & \theta_1：斜率  
