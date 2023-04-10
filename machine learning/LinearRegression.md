@@ -1,4 +1,4 @@
-# 一元线性回归分析
+# Linea Regression
 
 
 
@@ -84,6 +84,8 @@ $$
 
 ![image-20230409183718748](../image/LinearRegression/image-20230409183718748.png)
 
+## 对鸢尾花数据集中petal_length和petal_width两列数据进行一元线性回归分析。对上述两列数据进行预处理并进行回归分析，画出散点图和回归线。打印回归方程的截距和斜率。根据回归模型，给定花萼长度为4.0的花，预测其花萼宽度。
+
 ```python
 import pandas as pd
 import numpy as np
@@ -112,5 +114,44 @@ print("intercept（截距）:",lmodel.intercept_)
 print("均方误差 :",np.mean(pre_y)**2)
 
 print("predict petal_length=4.0:",lmodel.predict([[4.0]]))
+```
+
+# Multivariate Linea Regression
+
+在实际经济问题中，一个变量往往受到多个变量的影响。例如，家庭消费支出，除了受家庭可支配收入的影响外，还受诸如家庭所有的财富、物价水平、金融机构存款利息等多种因素的影响。也就是说，一个因变量和多个自变量有依存关系，而且有时几个影响因素主次难以区分，或者有的因素虽属次要，但也不能忽略。这时采用一元回归分析进行预测难以奏效，需要多元回归分析。
+
+多元回归分析是指通过对两个或两个以上的自变量与一个因变量的相关分析，建立预测模型进行预测的方法。当自变量与因变量之间存在线性关系时称为多元线性回归分析。
+
+![image-20230410183024395](../image/LinearRegression/image-20230410183024395.png)
+
+![image-20230410184139392](../image/LinearRegression/image-20230410184139392.png)
+
+![image-20230410184519805](../image/LinearRegression/image-20230410184519805.png)
+
+![image-20230410185258642](../image/LinearRegression/image-20230410185258642.png)
+
+## 引入boston房价数据集，建立多元线性回归模型，建模时将数据集随机分为训练集和测试集。使用训练集训练模型，使用测试集测试，并打印测试集的均方误差。
+
+```python
+import numpy as np
+import pandas as pd
+from sklearn import datasets
+d=datasets.load_boston()
+data=pd.DataFrame(d.data)
+data['price']=d.target
+data.sample(5)
+
+from sklearn.linear_model import LinearRegression 
+from sklearn.model_selection import train_test_split
+
+lmodel2=LinearRegression()
+x_train,x_test,y_train,y_test=train_test_split(d.data,d.target,random_state=666)
+lmodel2.fit(x_train,y_train)
+
+y_predict=lmodel2.predict(x_test)
+
+from sklearn.metrics import mean_squared_error
+print('预测值的均方误差：', mean_squared_error(y_test,y_predict))
+print(lmodel2.score(x_test,y_test))
 ```
 
