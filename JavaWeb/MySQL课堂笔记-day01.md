@@ -553,25 +553,23 @@ order by
 +--------+----------+---------+
 ```
 
-?	
-
 	select 
-		字段						3
+		字段			3
 	from
-		表名						1
+		表名			1
 	where
-		条件						2
+		条件			2
 	order by
-		....						4
+		....		 4
 	
 	order by是最后执行的。
 
 14、分组函数？
-	count 计数
-	sum 求和
-	avg 平均值
-	max 最大值
-	min 最小值
+			count 计数
+			sum 求和
+			avg 平均值
+			max 最大值
+			min 最小值
 
 	记住：所有的分组函数都是对“某一组”数据进行操作的。
 	
@@ -726,67 +724,70 @@ select max(sal),job from emp group by job;
 +----------+-----------+
 ```
 
-	注意：分组函数一般都会和group by联合使用，这也是为什么它被称为分组函数的原因。
-	并且任何一个分组函数（count sum avg max min）都是在group by语句执行结束之后才会执行的。
-	当一条sql语句没有group by的话，整张表的数据会自成一组。
-	
-	select ename,max(sal),job from emp group by job;
-	以上在mysql当中，查询结果是有的，但是结果没有意义，在Oracle数据库当中会报错。语法错误。
-	Oracle的语法规则比MySQL语法规则严谨。
-	记住一个规则：当一条语句中有group by的话，select后面只能跟分组函数和参与分组的字段。
-	
-	每个工作岗位的平均薪资？
-		select job,avg(sal) from emp group by job;
-		+-----------+-------------+
-		| job       | avg(sal)    |
-		+-----------+-------------+
-		| ANALYST   | 3000.000000 |
-		| CLERK     | 1037.500000 |
-		| MANAGER   | 2758.333333 |
-		| PRESIDENT | 5000.000000 |
-		| SALESMAN  | 1400.000000 |
-		+-----------+-------------+
-	
-	多个字段能不能联合起来一块分组？
-	案例：找出每个部门不同工作岗位的最高薪资。
-		select 
-			deptno,job,max(sal)
-		from
-			emp
-		group by
-			deptno,job;
-	
-	找出每个部门的最高薪资，要求显示薪资大于2900的数据。
-	
-	第一步：找出每个部门的最高薪资
-	select max(sal),deptno from emp group by deptno;
-		+----------+--------+
-		| max(sal) | deptno |
-		+----------+--------+
-		|  5000.00 |     10 |
-		|  3000.00 |     20 |
-		|  2850.00 |     30 |
-		+----------+--------+
-	
-	第二步：找出薪资大于2900
-	select max(sal),deptno from emp group by deptno having max(sal) > 2900; // 这种方式效率低。
-		+----------+--------+
-		| max(sal) | deptno |
-		+----------+--------+
-		|  5000.00 |     10 |
-		|  3000.00 |     20 |
-		+----------+--------+
-	
-	select max(sal),deptno from emp where sal > 2900 group by deptno;  // 效率较高，建议能够使用where过滤的尽量使用where。
-		+----------+--------+
-		| max(sal) | deptno |
-		+----------+--------+
-		|  5000.00 |     10 |
-		|  3000.00 |     20 |
-		+----------+--------+
-	
-	
-	
+```mysql
+注意：分组函数一般都会和group by联合使用，这也是为什么它被称为分组函数的原因。
+并且任何一个分组函数（count sum avg max min）都是在group by语句执行结束之后才会执行的。
+当一条sql语句没有group by的话，整张表的数据会自成一组。
+
+select ename,max(sal),job from emp group by job;
+以上在mysql当中，查询结果是有的，但是结果没有意义，在Oracle数据库当中会报错。语法错误。
+Oracle的语法规则比MySQL语法规则严谨。
+记住一个规则：当一条语句中有group by的话，select后面只能跟分组函数和参与分组的字段。
+
+每个工作岗位的平均薪资？
+	select job,avg(sal) from emp group by job;
+	+-----------+-------------+
+	| job       | avg(sal)    |
+	+-----------+-------------+
+	| ANALYST   | 3000.000000 |
+	| CLERK     | 1037.500000 |
+	| MANAGER   | 2758.333333 |
+	| PRESIDENT | 5000.000000 |
+	| SALESMAN  | 1400.000000 |
+	+-----------+-------------+
+
+多个字段能不能联合起来一块分组？
+案例：找出每个部门不同工作岗位的最高薪资。
+	select 
+		deptno,job,max(sal)
+	from
+		emp
+	group by
+		deptno,job;
+
+找出每个部门的最高薪资，要求显示薪资大于2900的数据。
+
+第一步：找出每个部门的最高薪资
+select max(sal),deptno from emp group by deptno;
+	+----------+--------+
+	| max(sal) | deptno |
+	+----------+--------+
+	|  5000.00 |     10 |
+	|  3000.00 |     20 |
+	|  2850.00 |     30 |
+	+----------+--------+
+
+第二步：找出薪资大于2900
+select max(sal),deptno from emp group by deptno having max(sal) > 2900; // 这种方式效率低。
+	+----------+--------+
+	| max(sal) | deptno |
+	+----------+--------+
+	|  5000.00 |     10 |
+	|  3000.00 |     20 |
+	+----------+--------+
+
+select max(sal),deptno from emp where sal > 2900 group by deptno;  // 效率较高，建议能够使用where过滤的尽量使用where。
+	+----------+--------+
+	| max(sal) | deptno |
+	+----------+--------+
+	|  5000.00 |     10 |
+	|  3000.00 |     20 |
+	+----------+--------+
+```
+
+
+?	
+?	
 	找出每个部门的平均薪资，要求显示薪资大于2000的数据。
 	
 	第一步：找出每个部门的平均薪资
@@ -814,15 +815,17 @@ select max(sal),job from emp group by job;
 
 17、总结一个完整的DQL语句怎么写？
 
-	select		5
-		..
-	from			1	
-		..
-	where			2
-		..
-	group by		3
-		..
-	having		4
-		..
-	order by		6
-		..
+```mysql
+select		5
+	..
+from		1	
+	..
+where		2
+	..
+group by	3
+	..
+having		4
+	..
+order by	6
+	..
+```
