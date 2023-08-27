@@ -685,9 +685,14 @@ where
 
 > concat(s1, s2...sn)	字符串 s1,s2 等多个字符串合并为一个字符串
 >
-> - groupconcat(字段)	分组后对组内字段进行拼接
 
 ![image-20230817215406450](../image/MySQL/image-20230817215406450.png)
+
+> group_concat( [distinct] 要连接的字段 [order by 排序字段 asc/desc  ] [separator '分隔符'] );	分组后对组内字段进行拼接
+
+可以使用`distinct`排除重复值；可以使用`order by`子句对结果中的值进行排序；
+
+返回的字符串的默认分隔符从逗号(`，`)，若要改为其他分隔符，则使用`SEPARATOR`子句修改分隔符
 
 > concat_ws(x, s1,s2...sn)	同 concat(s1,s2,...) 函数，但是每个字符串之间要加上 x，x 可以是分隔符
 
