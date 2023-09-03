@@ -21,7 +21,7 @@
 > - 数值类型
 >   - 整数类型
 >     - tinyint 小整数  0/1 
->     - int 大整数  满足大多数的正数
+>     - int 大整数  满足大多数的整数
 >     - bigint 超大整数
 >   - 浮点类型 带有小数点
 >     - float
@@ -160,7 +160,7 @@ create table if not exists persons1 (
     firstName varchar(25),
     address varchar(25),
     city varchar(25),
-    constraint 主键标签 primary key(字段1，字段2)
+    constraint 联合主键别名 primary key(字段1，字段2)
 );
 -- 删除主键
 alter table 表名 drop primary key；
@@ -724,8 +724,8 @@ where
 
 > substring_index(s, delimiter, number)	
 >
-> - 如果 number 是正数，返回第 number 个字符左边的字符串。
-> - 如果 number 是负数，返回第(number 的绝对值(从右边数))个字符右边的字符串。
+> - 如果 number 是正数，返回第 number 个delimiter字符左边的字符串。
+> - 如果 number 是负数，返回第(number 的绝对值(从右边数))个delimiter字符右边的字符串。
 
 ![image-20230818113046740](../image/MySQL/image-20230818113046740.png)
 
@@ -797,7 +797,7 @@ where
 
 ![image-20230818104539507](../image/MySQL/image-20230818104539507.png)
 
-> date_sub(date,intercal expr type)	函数从日期减去指定的时间间隔。	等同于subdate
+> date_sub(date,interval expr type)	函数从日期减去指定的时间间隔。	等同于subdate
 
 ![image-20230818104604084](../image/MySQL/image-20230818104604084.png)
 

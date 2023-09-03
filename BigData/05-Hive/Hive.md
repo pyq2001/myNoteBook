@@ -159,6 +159,32 @@ beeline
 
 metastore占用的端口号是: 9083
 
+### hive和hdfs中的元数据
+
+**hive中的元数据和hdfs中元数据有哪些区别呢额?**
+
+> **功能不同:** 
+>
+> hive中的元数据是用来将结构化数据映射为表的
+>
+> hdfs中的元数据是用来查询和记录文件状态的.
+>
+> **内容不同:**
+>
+> hive的元数据存储的是数据的库名,表名,字段信息,表的类型,创建修改时间.......
+>
+> hdfs的元数据存储的是文件的名称,大小,副本数量,创建修改时间.....
+>
+> **存储位置不同:**
+>
+> hive元数据存储在mysql中(只有磁盘中存在)
+>
+> hdfs元数据存储在内存和磁盘中
+
+hive中的数据和hdfs中的数据有什么区别?
+
+> hive中没有数据,因为hive不能存储数据,需要借助hdfs进行数据存储.
+
 ### 数仓的分层架构
 
 > ODS层(operation data Store): 数据操作层,源数据层,主要就是将各个数据源中的数据集中采集到指定平台中,几乎不对数据做任何处理,只是临时存放等待后续处理
@@ -755,6 +781,73 @@ alter table test_db.score_parts
 > 多级分区表的层级一般不超过三级,因为数据层级过多,就会产生大量的小文件.
 
 > 查询数据内容时, 如果对于表进行了分区,并且根据分区字段进行了筛选则我们读取文件时只读取对应分区内的数据条目,减少了数据的检索方位,提高了执行效率.
+
+### 动态分区
+
+> 尽量避免动态分区
+>
+> 因为动态分区可能造成误操作,使服务器终止运行.
+
+```sql
+-- 创建数据表
+drop table test_db.orders_part;
+CREATE TABLE test_db.orders_part
+(
+    orderId        bigint COMMENT '订单id',
+    orderNo        string COMMENT '订单编号',
+    shopId         bigint COMMENT '门店id',
+    userId         bigint COMMENT '用户id',
+    orderStatus    tinyint COMMENT '订单状态 -3:用户拒收 -2:未付款的订单 -1：用户取消 0:待发货 1:配送中 2:用户确认收货',
+    goodsMoney     double COMMENT '商品金额',
+    deliverMoney   double COMMENT '运费',
+    totalMoney     double COMMENT '订单金额（包括运费）',
+    realTotalMoney double COMMENT '实际订单金额（折扣后金额）',
+    payType        tinyint COMMENT '支付方式,0:未知;1:支付宝，2：微信;3、现金；4、其他',
+    isPay          tinyint COMMENT '是否支付 0:未支付 1:已支付',
+    userName       string COMMENT '收件人姓名',
+    userAddress    string COMMENT '收件人地址',
+    userPhone      string COMMENT '收件人电话',
+    createTime     timestamp COMMENT '下单时间',
+    payTime        timestamp COMMENT '支付时间',
+    totalPayFee    int COMMENT '总支付金额'
+)
+    partitioned by (dt string)
+    ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t';
+
+-- 1. 分区表的静态插入方式
+-- 此处插入数据,是手动指定分区名称为 dt=2022-12-21
+-- 此时有多少个分区,我们手动导入多少次
+load data local inpath '/root/hive_data/itheima_orders.txt' into table test_db.orders_part partition (dt = '2022-12-21');
+load data local inpath '/root/hive_data/itheima_orders.txt' into table test_db.orders_part partition (dt = '2022-12-23');
+
+-- 查询插入的数据内容
+select *
+from test_db.orders_part;
+
+-- 2. 分区表的动态插入方式
+-- 需求: 我们要按照支付时间进行分区,支付时间是哪个日期,我们就放入哪一个分区内部
+-- 如果使用静态分区方法进行处理,则需要书写大量的导入代码,且容易出错.
+-- 其实动态加载分区表数据的原理非常简单,就是将数据插入到分区表中,同时,给最后一个字段传分区字段值,表会根据字段值的不同,将数据写入不同的分区表中.
+-- 使用insert into插入分区表中的数据
+-- 最新版本的hive支持该操作方式,但是开发中常用的版本一般不支持
+/*insert into test_db.orders_part
+select *, to_date(payTime) as dt
+from test_db.orders;*/
+
+-- 查询分区表有哪些分区
+-- show partitions test_db.orders_part;
+
+-- 如果想要使用动态加载分区表的方式,需要开启分区非严格模式
+set hive.exec.dynamic.partition.mode=nonstrict;
+
+-- 使用动态加载方式加载分区表数据
+insert into test_db.orders_part partition (dt)
+select *, to_date(payTime) as dt
+from test_db.orders;
+
+-- 查询分区表有哪些分区
+show partitions test_db.orders_part;
+```
 
 ### 分桶表
 
@@ -1616,7 +1709,6 @@ select array_contains(map_values(`map`('name', '小明', 'age', 18, 'gender', '�
 -- 5. 获取map类型数据中,所有的键 和所有的值
 select map_keys(`map`('name', '小明', 'age', 18, 'gender', '男'));
 select map_values(`map`('name', '小明', 'age', 18, 'gender', '男'));
-\
 
 -- 6. 对于array类型数据进行排序
 select sort_array(`array`(4, 2, 5, 1, 3));
@@ -2330,65 +2422,294 @@ STORED AS orc tblproperties ("orc.compress"="SNAPPY"); --3.78M
 
 ### join优化
 
-- 底层还是MapReduce的join优化。
+> 底层还是MapReduce的join优化。
+>
+> MapReduce中有两种join方式。指的是join的行为发生什么阶段。
+>
+> - map端join
+>
+> - reduce端join
 
-- MapReduce中有两种join方式。指的是join的行为发生什么阶段。
+优化1：==Hive自动尝试选择map端join提高join的效率== 省去shuffle的过程。
 
-  - map端join
-  - reduce端join
+这个优化策略在小表和大表的连接过程中使用
 
-- 优化1：==Hive自动尝试选择map端join提高join的效率== 省去shuffle的过程。
+```sql
+开启 mapjoin 参数设置：
+（1）设置自动选择 mapjoin
+set hive.auto.convert.join = true;  --默认为 true
+（2）大表小表的阈值设置：
+set hive.mapjoin.smalltable.filesize= 25000000;
+```
 
-- 这个优化策略在小表和大表的连接过程中使用
+优化2：==大表join大表==
 
-  ```sql
-  开启 mapjoin 参数设置：
-  （1）设置自动选择 mapjoin
-  set hive.auto.convert.join = true;  --默认为 true
-  （2）大表小表的阈值设置：
-  set hive.mapjoin.smalltable.filesize= 25000000;
-  ```
+```sql
+--背景：
+大表join大表本身数据就十分具体，如果join字段存在null空值 如何处理它？
+任何数据和null进行连接,都无法连接成功,所以此时我们会进行空值处理
 
-- 优化2：大表join大表
+--方式1：空key的过滤  此行数据不重要  where is not null
+参与join之前 先把空key的数据过滤掉
+SELECT a.* FROM (SELECT * FROM nullidtable WHERE id IS NOT NULL ) a JOIN ori b ON a.id =b.id;
 
-  ```sql
-  --背景：
-  大表join大表本身数据就十分具体，如果join字段存在null空值 如何处理它？
-  任何数据和null进行连接,都无法连接成功,所以此时我们会进行空值处理
-  
-  --方式1：空key的过滤  此行数据不重要  where is not null
-  参与join之前 先把空key的数据过滤掉
-  SELECT a.* FROM (SELECT * FROM nullidtable WHERE id IS NOT NULL ) a JOIN ori b ON a.id =b.id;
-  
-  --方式2：空Key转换
-  CASE WHEN a.id IS NULL THEN 'xxx任意字符串' ELSE a.id END  -- 如果给空值赋值默认值空值数量太大,会造成某个桶的数据量过大
-  CASE WHEN a.id IS NULL THEN concat('hive', rand()) ELSE a.id  --避免转换之后数据倾斜 随机分布打散
-  
-  -- 方式3: 对于两张大表中的数据先过滤再连接  
-  -- 不建议
-  select * from t1 join t2 on t1.id = t2.id and t1.price > 1000;
-  -- 建议
-  select * from (select * from t1 where price > 1000) t1 join t2 on t1.id = t2.id;
-  ```
+--方式2：空Key转换
+CASE WHEN a.id IS NULL THEN 'xxx任意字符串' ELSE a.id END  -- 如果给空值赋值默认值空值数量太大,会造成某个桶的数据量过大
+CASE WHEN a.id IS NULL THEN concat('hive', rand()) ELSE a.id  --避免转换之后数据倾斜 随机分布打散
 
-- 优化3：桶表join提高优化效率。bucket mapjoin
+-- 方式3: 对于两张大表中的数据先过滤再连接  
+-- 不建议
+select * from t1 join t2 on t1.id = t2.id and t1.price > 1000;
+-- 建议
+select * from (select * from t1 where price > 1000) t1 join t2 on t1.id = t2.id;
+```
 
-  ```ini
-  1.1 条件
-  	1） set hive.optimize.bucketmapjoin = true;
-  	2） 一个表的bucket数是另一个表bucket数的整数倍  第一个表分为4桶,第二个表可以是 1桶 2桶 4桶 8桶...
-  	3） bucket列 == join列
-  	4） 必须是应用在map join的场景中
-  
-  1.2 注意
-  	1）如果表不是bucket的，只是做普通join。
-  ```
+优化3：==桶表join提高优化效率==。bucket mapjoin
+
+```ini
+1.1 条件
+	1） set hive.optimize.bucketmapjoin = true;
+	2） 一个表的bucket数是另一个表bucket数的整数倍  第一个表分为4桶,第二个表可以是 1桶 2桶 4桶 8桶...
+	3） bucket列 == join列
+	4） 必须是应用在map join的场景中
+
+1.2 注意
+	1）如果表不是bucket的，只是做普通join。
+```
+
+### 列裁剪和分区裁剪
+
+**列裁剪(在列式存储中效果最明显)**
+
+> 只读取我们指定的列,其余列不查看,提高查询效率,减小检索范围
+
+```properties
+Hive在读数据的时候，可以只读取查询中所需要用到的列，而忽略其他列。例如，若有以下查询：
+
+在实施此项查询中，Q表有5列（a，b，c，d，e），Hive只读取查询逻辑中真实需要的3列a、b、e， 而忽略列c，d；这样做节省了读取开销，中间表存储开销和数据整合开销。
+注意:Hive自动执行这种裁剪优化
+裁剪对应的参数项为：
+--默认值为真 在hive 2.x中无需在配置了, 直接为固定值: true
+hive.optimize.cp=true; 
+```
+
+**分区裁剪**
+
+> 只读取我们指定的分区数据,其余分区不查看,提高查询效率,减小检索范围
+>
+> 在join中必须书写on 尽量不要使用where 如果一定要使用在连接之前使用where
+
+```properties
+执行查询SQL的时候, 能在join之前提前过滤的操作, 一定要提前过滤, 不要在join后进行过滤操作
+如果操作的表是一张分区表, 那么建议一定要带上分区字段, 以减少扫描的数据量, 从而提升效率,
+例如，若有以下查询：
+
+注意:Hive自动执行这种裁剪优化
+分区参数为：
+-- 默认为就是true (在hive 2.x中无需在配置了, 直接为固定值: true)
+hive.optimize.pruner=true
+```
+
+### group by 数据倾斜优化
+
+> 数据倾斜 : 我们开启map任务时会将同一个key的数据读取到一个map任务中,如果有一个key里边的数据量过大,而其他的key 数据量极少此时就会出现数据倾斜.
+
+```sql
+开启Map端聚合参数设置
+--（1）是否在Map端进行聚合，默认为True
+set hive.map.aggr = true;
+--（2）在Map端进行聚合操作的条目数目
+set hive.groupby.mapaggr.checkinterval = 100000;
+
+--（3）有数据倾斜的时候进行负载均衡（默认是false）
+set hive.groupby.skewindata = true;
+
+--Q:在hive中数据倾斜开启负载均衡之后 底层执行机制是什么样？
+
+--step1:启动一个MapReduce程序 将倾斜的数据随机发送到各个reduce中 进行打散  负载均衡
+        每个reduce进行聚合都是局部聚合
+        
+--step2:再启动第二个MapReduce程序 将上一步局部聚合的结果汇总起来进行最终的聚合     
+```
+
+### count优化
+
+```sql
+-- 一般COUNT DISTINCT使用先GROUP BY再COUNT的方式替换：
+SELECT count(DISTINCT id) FROM bigtable;
+-- 结果
+SELECT count(id) FROM (SELECT id FROM bigtable GROUP BY id) a;
+
+注意: 尽量不使用count(*)  count(1)
+```
+
+### 笛卡尔积
+
+> 在开发中尽量避免笛卡尔积
+
+```properties
+1) 避免join的时候不加on条件，或者无效的on条件  
+2) 关联条件不要放置在where语句, 因为底层, 先产生笛卡尔积 然后基于where进行过滤 , 建议放置on条件上
+3) 如果实际开发中无法确定表与表关联条件 建议与数据管理者重新对接, 避免出现问题
+```
+
+### map和reduce数量调整
+
+> 1. 是map数越多越好？
+>
+> 答案是**否定**的。如果一个任务有很多小文件（远远小于块大小128m），则每个小文件也会被当做一个块，用一个map任务来完成，而一个map任务启动和初始化的时间远远大于逻辑处理的时间，就会造成很大的资源浪费。而且，同时可执行的map数是受限的。
+>
+> 2. 是不是保证每个map处理接近128m的文件块，就高枕无忧了？
+>
+> 答案也是不一定。比如有一个127m的文件，正常会用一个map去完成，但这个文件只有一个或者两个小字段，却有几千万的记录，如果map处理的逻辑比较复杂，用一个map任务去做，肯定也比较耗时。
+>
+> 3. 是不是reduce数越多越好？
+>
+> 答案是否定的。如果reduce设置的过大，对整个作业会产生一定的影响。
+> ①过多的启动和初始化reduce也会消耗时间和资源；
+> ②另外，有多少个reduce，就会有多少个输出文件，如果生成了很多个小文件，那么如果这些小文件作为下一个任务的输入，则也会出现小文件过多的问题；
+
+**Maptask个数调整** 
+
+```sql
+-- 小文件场景
+-- 每个Map最大输入大小(这个值决定了合并后文件的数量)
+set mapred.max.split.size=112345600;  
+-- 一个节点上split的至少的大小(这个值决定了多个DataNode上的文件是否需要合并)
+set mapred.min.split.size.per.node=112345600;
+-- 一个交换机下split的至少的大小(这个值决定了多个交换机上的文件是否需要合并)  
+set mapred.min.split.size.per.rack=112345600;
+-- 执行Map前进行小文件合并
+set hive.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
+
+-- 大文件场景, 增加Map数
+set mapred.reduce.tasks=10;
+```
+
+**Reducetask个数调整**
+
+```sql
+-- 总共受3个参数控制：
+-- 每个Reduce处理的数据量默认是256MB
+hive.exec.reducers.bytes.per.reducer=256123456
+-- 每个任务最大的reduce数，默认为999
+hive.exec.reducers.max=999
+-- mapreduce.job.reduces
+-- 该值默认为-1，由hive自己根据任务情况进行判断。也可以手动控制
+set mapreduce.job.reduces = 8;
+```
+
+> 注意: 以下几种, 不管如何设置, 最终编译后reduce只能有一个
+>
+> 1) 执行order by操作    
+>
+> 2) 执行不需要group by直接聚合的操作  select sum(price) from orders;
+>
+> 3) 执行笛卡尔积
+>
+> 注意: 在开发中上述三种操作方式都不被许可
+
+### JVM重用
+
+> JVM : JAVA的虚拟机环境
+>
+> 每开启一个map 或者reduce任务都会开辟进程,该进程是jvm进程.
+
+> JVM重用是Hadoop调优参数的内容，其对Hive的性能具有非常大的影响，特别是对于很难避免小文件的场景或task特别多的场景，这类场景大多数执行时间都很短。
+>
+> Hadoop的默认配置通常是使用派生JVM来执行map和Reduce任务的。这时JVM的启动过程可能会造成相当大的开销，尤其是执行的job包含有成百上千task任务的情况。
+>
+> 此操作, **在hive2.x默认支持已经不需要配置了**
+> 默认情况下, container资源容器  只能使用一次,不能重复使用, 开启JVM重用, 运行container容器可以被重复使用,在hive2.x已经默认支持了
+>
+> 
+>
+> 在开启每一个任务时 都需要申请资源运行jvm进程, 任务执行完成后,需要将资源返还给服务器
+>
+> 当小文件过多,或者task数量过多时,需要频繁的创建个销毁进程.
+>
+> 此时如果开启JVM重用, 任务执行完成后,进程不会立即销毁,会等待下一个任务或文件传递进来,使用该进程继续执行, 此时减少了jvm反复销毁重建的时间和系统资源损失.
+
+### 推测机制和执行计划
+
+> **注意:** 执行计划只是计划,在mr任务执行过程中不一定按照这个计划执行.
+>
+> 在执行该任务过程中,我们会使用drivers中的优化器不断进行优化.执行过程略有差距
+
+- 执行计划explain
+  - 通过执行计划可以看出==hive接下来是如何打算执行这条sql的==。
+
+  - 语法格式：explain + sql语句
 
 
+![image-20230828193407864](../image/Hive/image-20230828193407864.png)
 
+![image-20230828193434048](../image/Hive/image-20230828193434048.png)
 
+> **查看执行计划,只需要查看两个点就可以**
+>
+> 1. 查看是否需要进行mr任务的执行
+> 2. 查看任务之间的依赖关系
 
+- 并行执行机制 (**默认开启**)
 
+  - 如果hivesql的底层某些stage阶段可以并行执行，就可以提高执行效率。
 
+  - 前提是==stage之间没有依赖==  并行的弊端是瞬时服务器压力变大。
 
+  - 参数
 
+    ```sql
+    set hive.exec.parallel=true; --是否并行执行作业。适用于可以并行运行的 MapReduce 作业，例如在多次插入期间移动文件以插入目标
+    set hive.exec.parallel.thread.number=16; --最多可以并行执行多少个作业。默认为8。
+    ```
+
+  ![image-20230828193652895](../image/Hive/image-20230828193652895.png)
+
+- Hive的严格模式 (**建议开启**)
+
+  - 注意。**不要和动态分区的严格模式搞混淆**。
+
+  - 这里的严格模式指的是开启之后 ==hive会禁止一些用户都影响不到的错误包括效率低下的操作==，不允许运行一些有风险的查询。
+
+  - 设置
+
+    ```sql
+    set hive.mapred.mode = strict --默认是严格模式  nonstrict
+    ```
+
+  - 解释
+
+    ```
+    1、如果是分区表，没有where进行分区裁剪 禁止执行
+    2、order by语句必须+limit限制
+    3、聚合函数必须使用group by 进行分组
+    ```
+
+- 推测执行机制(**建议关闭**)
+
+  - MapReduce中task的一个机制。
+
+  - 功能：
+    - 一个job底层可能有多个task执行，如果某些拖后腿的task执行慢，可能会导致最终job失败。
+    - 所谓的==推测执行机制就是通过算法找出拖后腿的task,为其启动备份的task==。
+    - 两个task同时处理一份数据，谁先处理完，谁的结果作为最终结果。
+  - 推测执行机制默认是开启的，但是在企业生产环境中==**建议关闭**==。
+
+  > **什么样的任务会开启推测执行机制????**
+  >
+  > 大任务, 处理逻辑复杂的任务,小文件众多的任务.....
+  >
+  > 总而言之就是处理速度慢,消耗资源多的任务
+  >
+  > 
+  >
+  > 在企业生产环境中==**建议关闭**==
+  >
+  > 此时如果我们再开启一个相同的任务,服务器性能损失比较大.
+  >
+  > 
+  >
+  > 某个任务由于数据倾斜问题,反复执行失败,且没法解决, 我们可以尝试使用推测执行机制解决该问题.
+  >
+  > 某一时间段内,计算任务极其重要,不容有失,并且系统资源有空余,我们可以暂时开启推测执行机制.
