@@ -893,7 +893,8 @@ from 表名
 >   - n FOLLOWING：当前行下侧n行
 >
 > - range可以根据order by排序的字段来控制窗口的范围
->   - over(order by dt range between interval 6 day and dt) 	dt代表日期字段；窗口范围为当前时间的一周内的范围
+>   - over(order by dt range between interval 6 day  preceding and current row) 	
+>     dt代表日期字段；窗口范围为当前时间的一周内的范围
 
 > - 排序函数
 >   - row_number()	不并列排序

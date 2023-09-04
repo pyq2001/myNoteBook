@@ -2713,3 +2713,18 @@ set mapreduce.job.reduces = 8;
   > 某个任务由于数据倾斜问题,反复执行失败,且没法解决, 我们可以尝试使用推测执行机制解决该问题.
   >
   > 某一时间段内,计算任务极其重要,不容有失,并且系统资源有空余,我们可以暂时开启推测执行机制.
+
+## hive 注释信息中文乱码问题
+
+解决方案:
+
+```sql
+在mysql的hive库中, 执行一下SQL即可:
+use hive;
+alter table COLUMNS_V2 modify column COMMENT varchar(256) character set utf8;
+alter table TABLE_PARAMS modify column PARAM_VALUE varchar(4000) character set utf8;
+alter table PARTITION_PARAMS modify column PARAM_VALUE varchar(4000) character set utf8 ;
+alter table PARTITION_KEYS modify column PKEY_COMMENT varchar(4000) character set utf8;
+alter table INDEX_PARAMS modify column PARAM_VALUE varchar(4000) character set utf8;
+```
+
